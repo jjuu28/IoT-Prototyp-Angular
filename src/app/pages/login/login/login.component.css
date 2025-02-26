@@ -1,0 +1,103 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+/* Container für das Formular */
+.container {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  width: 420px;
+  text-align: center;
+}
+
+/* Überschrift */
+h2 {
+  margin-bottom: 25px;
+  font-size: 26px;
+}
+
+/* Formular-Felder */
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* Labels */
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.remember-me {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+
+/* Checkbox-Styling */
+.remember-me input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* Eingabefelder */
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* Button */
+button {
+  width: 100%;
+  padding: 14px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #218838;
+}
+
+/* Fehlermeldungen */
+.error {
+  color: red;
+  font-size: 14px;
+}
+
+/* Link zur Registrierung */
+.link-text {
+  margin-top: 15px;
+  font-size: 16px;
+}
+
+.link-text a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.link-text a:hover {
+  text-decoration: underline;
+}

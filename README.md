@@ -1,3 +1,26 @@
+ToDO:
+
+- Core:
+  - Header
+  - Footer
+  - 
+
+- Home
+  - fehlende Seitenkomponenten:
+    - Wichtige Meldungen
+    - Sensorinfos
+    - 
+
+- Dashboard
+  -  fehlende Seitenkomponenten:
+    - Sensorinfos
+    - Sensorübersicht einer Gruppe
+    - 
+
+
+
+
+
 # AngularTest
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.7.
