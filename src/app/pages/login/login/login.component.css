@@ -1,14 +1,13 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+/* Wrapper, um das Formular vertikal und horizontal zu zentrieren */
+.login-wrapper {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
+  justify-content: center; /* Zentriert horizontal */
+  align-items: center; /* Zentriert vertikal */
+  height: 100vh; /* Nutzt die gesamte Höhe des Bildschirms */
+  background-color: #f8f9fa; /* Optionale Hintergrundfarbe */
 }
 
-/* Container für das Formular */
+/* Login-Container */
 .container {
   background: white;
   padding: 40px;

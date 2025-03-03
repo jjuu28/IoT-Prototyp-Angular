@@ -1,0 +1,37 @@
+/* Navigationselemente im Footer */
+.footer-nav {
+  position: fixed;  /* Fixiert den Footer am Bildschirm */
+  bottom: 0;        /* Stellt sicher, dass der Footer am unteren Rand des Bildschirms bleibt */
+  width: 100%;      /* Der Footer nimmt die gesamte Breite des Bildschirms ein */
+  background-color: #f4f4f4;
+  padding: 10px 0;
+  text-align: center;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);  /* Optionaler Schatten für den Footer */
+  z-index: 1000;    /* Stellt sicher, dass der Footer über anderen Inhalten bleibt */
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* Stil für jedes Navigationselement */
+.nav-item {
+  text-align: center;
+  padding: 5px;
+}
+
+.nav-item .icon {
+  font-size: 24px;
+  display: block;
+}
+
+.nav-item p {
+  font-size: 12px;
+  margin-top: 5px;
+  color: #333;
+}
+
+/* Hover-Effekt für die Navigationselemente */
+.footer-nav .nav-item:hover {
+  background-color: #e0e0e0;
+  border-radius: 5px;
+}
