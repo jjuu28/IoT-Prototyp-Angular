@@ -1,0 +1,21 @@
+<header>
+  <h1>Dynamic Sensor Dashboard</h1>
+  <p>Visualize real-time and historical sensor data seamlessly.</p>
+  <button (click)="toggleDarkMode()">🌙</button>
+  <button (click)="logout()">Logout</button>
+  <button routerLink="/sensor/add">Sensor hinzufügen</button>
+</header>
+
+<main id="main-dashboard">
+  <div *ngFor="let sensor of sensors" class="grid-item">
+    <h3>{{ sensor.valueName }} ({{ sensor.sensorId }})</h3>
+    <div style="display: flex; align-items: center;">
+      <div [id]="'status-indicator-' + sensor.ident" class="status-indicator"></div>
+      <button (click)="updateSensorData(sensor.sensorId, sensor.valueName, sensor.ident, -1, 0)">Last Hour</button>
+      <button (click)="enableLiveData(sensor.ident)">Live</button>
+      <button (click)="promptCustomRange(sensor.sensorId, sensor.valueName, sensor.ident)">Custom Range</button>
+    </div>
+    <canvas [id]="'chart-' + sensor.ident"></canvas>
+  </div>
+</main>
+
