@@ -1,0 +1,28 @@
+.container {
+  padding: 20px;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.alert-box {
+  background-color: #ffcccc;
+  padding: 10px;
+  border-left: 5px solid red;
+  margin-bottom: 20px;
+}
+
+.sensor-changes {
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.sensor-item {
+  margin-bottom: 10px;
+  padding: 5px;
+  border-bottom: 1px solid #ddd;
+}

@@ -1,1 +1,26 @@
-<p> Home Seite </p>
+<!-- home.component.html -->
+<div class="container">
+  <h2>Hallo {{ username }}!</h2>
+  <p>Überwache deine Felder!</p>
+
+  <div class="button-group">
+    <button (click)="navigate('/sensors')">Sensor Überblick</button>
+    <button (click)="navigate('/sensorgroup')">Sensor Gruppen</button>
+    <button (click)="navigate('/messages')">Datenexporte</button>
+  </div>
+
+  <div class="alert-box" *ngIf="messages">
+    <h3>Wichtige Meldungen:</h3>
+    <p><strong>{{ messages.title }}</strong></p>
+    <p>{{ messages.description }}</p>
+    <button (click)="navigate('/messages')">Alle Benachrichtigungen</button>
+  </div>
+
+  <div class="sensor-changes">
+    <h3>Letzte Sensor Änderungen:</h3>
+    <div *ngFor="let change of sensorChanges" class="sensor-item">
+      <p><strong>{{ change.sensorName }}</strong></p>
+      <p>{{ change.description }}</p>
+    </div>
+  </div>
+</div>
