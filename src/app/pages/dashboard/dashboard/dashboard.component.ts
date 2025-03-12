@@ -17,10 +17,12 @@ import { NgForOf, NgIf} from '@angular/common';
 })
 export class DashboardComponent implements OnInit {
   sensors: Object = [];
+  sensorGroups: { [key: string]: any[] } = {};
   charts: { [key: string]: any } = {};
   liveTimeouts: { [key: string]: any } = {};
   darkMode: boolean = false;
   authToken: string | null = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+  expandedFields: { [key: string]: boolean } = {}; // Zustände für Einklappen der Gruppen
 
   constructor(private router: Router, private sensorService: SensorService, private webSocketService: WebSocketService) {}
 
@@ -44,6 +46,7 @@ export class DashboardComponent implements OnInit {
       (sensors) => {
         console.log("Empfangene Sensoren:", sensors);
         this.sensors = sensors;
+        this.groupSensorsByField();
 
         if (!sensors || Object.keys(sensors).length === 0) {
           console.warn("Keine Sensoren gefunden!");
@@ -55,6 +58,19 @@ export class DashboardComponent implements OnInit {
 
     );
   }
+
+  groupSensorsByField() {
+    this.sensorGroups = {};
+    Object.values(this.sensors).forEach((sensor: any) => {
+      const fieldName = sensor.field_name || "Unbekanntes Feld";
+      if (!this.sensorGroups[fieldName]) {
+        this.sensorGroups[fieldName] = [];
+        this.expandedFields[fieldName] = true; // Standardmäßig alle Gruppen geöffnet
+      }
+      this.sensorGroups[fieldName].push(sensor);
+    });
+  }
+
   fetchInitialData() {
     console.log("🔄 Abrufen der initialen Sensordaten...");
 
@@ -104,12 +120,32 @@ export class DashboardComponent implements OnInit {
       this.updateStatusIndicator(sensor.ident, 'gray');
     }, 100);
   }
+
+  toggleFieldGroup(fieldName: string) {
+    this.expandedFields[fieldName] = !this.expandedFields[fieldName];
+    // wieder herstellen der charts nach dem einklappen
+    if(this.expandedFields[fieldName]){
+      this.sensorGroups[fieldName].forEach((sensor: any) => this.createSensorCard(sensor));
+      //get data for the sensors with timeout to avoid too many requests
+      setTimeout(() => {
+        this.sensorGroups[fieldName].forEach((sensor: any) => {
+          this.updateSensorData(sensor.sensorId, sensor.valueName, sensor.ident, -1, 0);
+
+        });
+      }, 500);
+
+    }
+  }
+
+  navigateToFieldPage(fieldName: string) {
+    this.router.navigate(['/field', fieldName]);
+  }
   toggleDarkMode() {
     this.darkMode = !this.darkMode;
     localStorage.setItem("darkMode", this.darkMode ? "enabled" : "disabled");
   }
 
-  logout() {
+   logout() {
     localStorage.removeItem("authToken");
     sessionStorage.removeItem("authToken");
     window.location.href = "/login";
@@ -137,6 +173,8 @@ export class DashboardComponent implements OnInit {
         // **🚀 Wenn EndOffset 0 ist, aktiviere Live-Daten**
         if (endOffset === 0) {
           this.enableLiveData(ident);
+        } else if (endOffset !== 0){
+          this.disableLiveData(ident);
         }
       },
       (error) => console.error("❌ Fehler beim Abrufen der Sensordaten:", error)
