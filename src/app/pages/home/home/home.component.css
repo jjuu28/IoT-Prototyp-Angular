@@ -16,13 +16,27 @@
 }
 
 .sensor-changes {
-  background: #f9f9f9;
-  padding: 10px;
-  border-radius: 5px;
+  margin-top: 20px;
 }
 
 .sensor-item {
-  margin-bottom: 10px;
-  padding: 5px;
+  display: flex;
+  align-items: center;
   border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+.sensor-icon {
+  font-size: 24px;
+  margin-right: 15px;
+}
+
+.sensor-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.sensor-value {
+  font-weight: bold;
+  color: #333;
 }
