@@ -1,17 +1,17 @@
-import {Component, NgModule, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { SensorService } from '../../../services/sensor.service';
 import { WebSocketService } from '../../../services/websocket.service';
-import {Router, RouterModule} from '@angular/router';
+import {Router} from '@angular/router';
 import Chart from 'chart.js/auto';
-import {CommonModule, NgForOf} from '@angular/common';
-import {HttpClientModule } from '@angular/common/http'; // ✅ HttpClientModule importieren
+import { NgForOf, NgIf} from '@angular/common';
 
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   imports: [
-    NgForOf
+    NgForOf,
+    NgIf
   ],
   styleUrls: ['./dashboard.component.css']
 })
@@ -30,26 +30,52 @@ export class DashboardComponent implements OnInit {
       this.router.navigate(['/login']);
     } else {
       this.loadSensors();
+      setTimeout(() => {
+        this.fetchInitialData();
+      }, 500);
       this.listenForLiveUpdates();
       this.darkMode = localStorage.getItem("darkMode") === "enabled";
     }
-
   }
 
   loadSensors() {
-    console.log("AuthTok: ", this.authToken);
+    console.log("AuthToken:", this.authToken);
     this.sensorService.getSensors(this.authToken!).subscribe(
       (sensors) => {
+        console.log("Empfangene Sensoren:", sensors);
         this.sensors = sensors;
-        Object.values(this.sensors).forEach((sensor: any) => this.createSensorCard(sensor));      },
-      (error) => console.error("Fehler beim Abrufen der Sensoren", error)
+
+        if (!sensors || Object.keys(sensors).length === 0) {
+          console.warn("Keine Sensoren gefunden!");
+        } else {
+          Object.values(this.sensors).forEach((sensor: any) => this.createSensorCard(sensor));
+        }
+      },
+      (error) => { console.error("Fehler beim Abrufen der Sensoren", error); this.logout(); }
+
     );
   }
+  fetchInitialData() {
+    console.log("🔄 Abrufen der initialen Sensordaten...");
+
+    for (const sensor of Object.values(this.sensors)) {
+      console.log("📡 Daten abrufen für Sensor:", sensor);
+      this.updateSensorData(sensor.sensorId, sensor.valueName, sensor.ident, -1, 0);
+
+      if (sensor.endOffset === 0) {
+        this.enableLiveData(sensor.ident);
+      }
+    }
+  }
+
 
   createSensorCard(sensor: any) {
     setTimeout(() => {
       const ctx = document.getElementById(`chart-${sensor.ident}`) as HTMLCanvasElement;
-      if (!ctx) return;
+      if (!ctx) {
+        console.error(`Canvas-Element für Sensor ${sensor.ident} nicht gefunden!`);
+        return;
+      }
 
       const isDarkMode = this.darkMode;
       const lineColor = isDarkMode ? '#9c27b0' : '#03a9f4';
@@ -73,9 +99,11 @@ export class DashboardComponent implements OnInit {
           scales: { x: { display: true }, y: { display: true } }
         }
       });
+
+      // **Live-Status-Indikator initialisieren**
+      this.updateStatusIndicator(sensor.ident, 'gray');
     }, 100);
   }
-
   toggleDarkMode() {
     this.darkMode = !this.darkMode;
     localStorage.setItem("darkMode", this.darkMode ? "enabled" : "disabled");
@@ -88,13 +116,31 @@ export class DashboardComponent implements OnInit {
   }
 
   updateSensorData(sensorId: string, valueName: string, ident: string, startOffset: number, endOffset: number) {
-    this.sensorService.getSensorData(sensorId, valueName, startOffset, endOffset, this.authToken).subscribe((data) => {
-      if (this.charts[ident]) {
-        this.charts[ident].data.labels = data.timestamps.map((t: any) => new Date(t).toLocaleTimeString());
-        this.charts[ident].data.datasets[0].data = data.values;
-        this.charts[ident].update();
-      }
-    });
+    console.log(`🔍 Abrufen von Daten für Sensor: ${sensorId}, Wert: ${valueName}, Zeitbereich: ${startOffset} bis ${endOffset}`);
+
+    this.sensorService.getSensorData(sensorId, valueName, startOffset, endOffset, this.authToken).subscribe(
+      (data) => {
+        console.log("📊 Empfangene Sensordaten:", data);
+
+        if (!data || !data.timestamps || !data.values || data.timestamps.length === 0) {
+          console.warn("⚠️ Keine Daten für diesen Sensor vorhanden!");
+          return;
+        }
+
+        if (this.charts[ident]) {
+          this.charts[ident].data.labels = data.timestamps.map((t: any) => new Date(t).toLocaleTimeString());
+          this.charts[ident].data.datasets[0].data = data.values;
+          this.charts[ident].update();
+          console.log(`✅ Diagramm für ${ident} aktualisiert!`);
+        }
+
+        // **🚀 Wenn EndOffset 0 ist, aktiviere Live-Daten**
+        if (endOffset === 0) {
+          this.enableLiveData(ident);
+        }
+      },
+      (error) => console.error("❌ Fehler beim Abrufen der Sensordaten:", error)
+    );
   }
 
   enableLiveData(ident: string) {

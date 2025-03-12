@@ -7,6 +7,7 @@
 </header>
 
 <main id="main-dashboard">
+  <p *ngIf="!sensors || Object.keys(sensors).length === 0">Keine Sensoren gefunden.</p>
   <div *ngFor="let sensor of Object.values(sensors)" class="grid-item">
     <h3>{{ sensor.valueName }} ({{ sensor.sensorId }})</h3>
     <div style="display: flex; align-items: center;">
