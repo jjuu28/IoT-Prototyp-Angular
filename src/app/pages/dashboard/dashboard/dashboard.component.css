@@ -71,6 +71,35 @@ canvas {
   align-items: center;
 }
 
+.field-list {
+  display: flex;
+  overflow-x: auto;
+  padding: 10px;
+}
+
+.field-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+  min-width: 100px;
+  transition: transform 0.2s ease;
+}
+
+.field-card:hover {
+  transform: scale(1.05);
+}
+
+.field-icon {
+  font-size: 2rem;
+}
+
 .sensor-container {
   padding-left: 15px;
 }
@@ -88,4 +117,27 @@ canvas {
   border-radius: 50%;
   background-color: gray;
   transition: background-color 0.3s ease;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.search-bar button {
+  margin-left: 5px;
+  padding: 8px;
+  background-color: black;
+  color: white;
+  border: none;
+  cursor: pointer;
 }

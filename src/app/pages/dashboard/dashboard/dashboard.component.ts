@@ -4,6 +4,7 @@ import { WebSocketService } from '../../../services/websocket.service';
 import {Router} from '@angular/router';
 import Chart from 'chart.js/auto';
 import { NgForOf, NgIf} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
 
 @Component({
@@ -11,7 +12,8 @@ import { NgForOf, NgIf} from '@angular/common';
   templateUrl: './dashboard.component.html',
   imports: [
     NgForOf,
-    NgIf
+    NgIf,
+    FormsModule
   ],
   styleUrls: ['./dashboard.component.css']
 })
@@ -19,10 +21,12 @@ export class DashboardComponent implements OnInit {
   sensors: Object = [];
   sensorGroups: { [key: string]: any[] } = {};
   charts: { [key: string]: any } = {};
+  fields: string[] = []; // Liste der vorhandenen Felder
   liveTimeouts: { [key: string]: any } = {};
   darkMode: boolean = false;
   authToken: string | null = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
   expandedFields: { [key: string]: boolean } = {}; // Zustände für Einklappen der Gruppen
+  searchQuery: string = ''; // Suchbegriff für Filterung
 
   constructor(private router: Router, private sensorService: SensorService, private webSocketService: WebSocketService) {}
 
@@ -66,6 +70,7 @@ export class DashboardComponent implements OnInit {
       if (!this.sensorGroups[fieldName]) {
         this.sensorGroups[fieldName] = [];
         this.expandedFields[fieldName] = true; // Standardmäßig alle Gruppen geöffnet
+        this.fields.push(fieldName);
       }
       this.sensorGroups[fieldName].push(sensor);
     });
@@ -251,6 +256,10 @@ export class DashboardComponent implements OnInit {
         this.updateStatusIndicator(ident, 'red');
       }, 30000);
     });
+  }
+  filterFields(): string[] {
+    if (!this.searchQuery) return this.fields;
+    return this.fields.filter(field => field.toLowerCase().includes(this.searchQuery.toLowerCase()));
   }
 
   protected readonly Object = Object;

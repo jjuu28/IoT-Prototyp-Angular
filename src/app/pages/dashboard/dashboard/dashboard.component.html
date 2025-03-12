@@ -1,10 +1,23 @@
-
 <header>
     <h1>Sensor Dashboard</h1>
     <p>Live-Daten nach Sensorfeldern gruppiert</p>
     <button (click)="toggleDarkMode()">🌙 Dark Mode</button>
     <button (click)="logout()">Logout</button>
 </header>
+
+<!-- 🔎 Suchfeld für Sensoren oder Felder -->
+<div class="search-bar">
+    <input type="text" [(ngModel)]="searchQuery" placeholder="Suche nach Sensoren oder Sensorgruppen" />
+    <button>🔍</button>
+</div>
+
+<!-- 📌 Felder-Übersicht (zum Ein- & Ausblenden von Sensorgruppen) -->
+<div class="field-list">
+    <div *ngFor="let fieldName of filterFields()" class="field-card" (click)="toggleFieldGroup(fieldName)">
+        <div class="field-icon">🌿</div>
+        <p>{{ fieldName }}</p>
+    </div>
+</div>
 
 <main id="main-dashboard">
     <p *ngIf="!sensors || Object.keys(sensors).length === 0">Keine Sensoren gefunden.</p>
