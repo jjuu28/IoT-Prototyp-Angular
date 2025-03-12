@@ -1,0 +1,37 @@
+<header>
+  <h1>Sensoren in {{ fieldName }}</h1>
+  <button routerLink="/dashboard">⬅ Zurück zum Dashboard</button>
+</header>
+
+<div *ngIf="sensors.length > 0; else noSensors">
+  <div class="sensor-list">
+    <div *ngFor="let sensor of sensors" class="sensor-card">
+      <h3>{{ sensor.valueName }} ({{ sensor.sensorId }})</h3>
+      <p><strong>Feld:</strong> {{ sensor.field_name }}</p>
+      <p><strong>Gruppe:</strong> {{ sensor.group_name }}</p>
+      <p><strong>Standort:</strong> {{ sensor.location }}</p>
+      <p><strong>Einheit:</strong> {{ sensor.unit }}</p>
+
+      <!-- 🆕 Anzeige der Grenzwerte -->
+      <div class="sensor-limits">
+        <p><strong>Obere Grenze:</strong> {{ sensor.limitUpper }}</p>
+        <p><strong>Untere Grenze:</strong> {{ sensor.limitLower }}</p>
+        <button (click)="editSensorLimits(sensor)">Grenzen bearbeiten</button>
+      </div>
+
+      <!-- 🆕 Anzeige der Meldungen -->
+      <div class="sensor-messages">
+        <h4>🚨 Letzte Meldungen</h4>
+        <ul>
+          <li *ngFor="let msg of sensor.messages">
+            {{ msg.text }} ({{ msg.date }})
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noSensors>
+  <p>❌ Keine Sensoren in dieser Gruppe gefunden.</p>
+</ng-template>

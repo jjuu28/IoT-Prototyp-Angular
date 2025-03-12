@@ -1,0 +1,60 @@
+header {
+  text-align: center;
+  padding: 10px;
+  background: #4caf50;
+  color: white;
+}
+
+.sensor-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.sensor-card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  text-align: center;
+  width: 200px;
+}
+
+.sensor-data {
+  background: #f9f9f9;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 5px;
+}
+
+button {
+  padding: 8px 12px;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.sensor-details {
+  background: #f1f1f1;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 5px;
+  text-align: left;
+}
+
+
+.sensor-limits {
+  background: #e3f2fd;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 5px;
+}
+
+.sensor-messages {
+  background: #ffebee;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 5px;
+}

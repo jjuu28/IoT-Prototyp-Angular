@@ -143,8 +143,16 @@ export class DashboardComponent implements OnInit {
   }
 
   navigateToFieldPage(fieldName: string) {
-    this.router.navigate(['/field', fieldName]);
+    console.log("📍 Navigiere zu:", `/dashboard/field/${fieldName}`);
+    this.router.navigate(['/dashboard', 'field', fieldName]).then(success => {
+      if (success) {
+        console.log("✅ Navigation erfolgreich!");
+      } else {
+        console.error("❌ Navigation fehlgeschlagen!");
+      }
+    });
   }
+
   toggleDarkMode() {
     this.darkMode = !this.darkMode;
     localStorage.setItem("darkMode", this.darkMode ? "enabled" : "disabled");

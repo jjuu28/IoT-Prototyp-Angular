@@ -28,4 +28,52 @@ export class SensorService {
 
     return this.http.get(`${this.apiUrl}/data?sensorId=${sensorId}&valueName=${valueName}&startOffset=${startOffset}&endOffset=${endOffset}`, { headers });
   }
+
+  getSensorLimits(sensorId: string, token: string | null): Observable<any> {
+    if (!token) return new Observable();
+
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + token
+    });
+
+    return this.http.get(`${this.apiUrl}/limits?sensorId=${sensorId}`, { headers });
+  }
+
+  // ✅ Grenzwerte aktualisieren (PUT /agrar/limits)
+  updateSensorLimits(sensorId: string, grenzeOben: number, grenzeUnten: number, token: string | null): Observable<any> {
+    if (!token) return new Observable();
+
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json'
+    });
+
+    const payload = { sensorId, grenzeOben, grenzeUnten };
+    return this.http.put(`${this.apiUrl}/limits`, payload, { headers });
+  }
+
+  // ✅ Meldungen abrufen (GET /agrar/limits/meldung)
+  getSensorMessages(sensorId: string, token: string | null): Observable<any> {
+    if (!token) return new Observable();
+
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + token
+    });
+
+    return this.http.get(`${this.apiUrl}/limits/meldung?sensorId=${sensorId}`, { headers });
+  }
+
+  // ✅ Meldung löschen (DELETE /agrar/limits/meldung)
+  deleteSensorMessage(sensorId: string, token: string | null): Observable<any> {
+    if (!token) return new Observable();
+
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + token
+    });
+
+    return this.http.delete(`${this.apiUrl}/limits/meldung?sensorId=${sensorId}`, { headers });
+  }
+
+
+
 }

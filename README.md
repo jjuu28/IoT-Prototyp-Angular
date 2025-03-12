@@ -1,5 +1,13 @@
 ToDO:
 
+- Vale ToDos:
+  - in Datenbank limits muss jeder Sensor mit SensorID und ValueName gespeichert werden
+  - überprüfen ob neue Sensoren automatisch in Datenbank Limits aufgenommen werden
+
+  - Gruppenübersicht anpassen
+    - Letzte Werte der Sensoren anzeigen
+    - Meldungen anzeigen und löschen
+
 - Core:
   - Header
   - Footer
