@@ -16,7 +16,7 @@ import {HttpClientModule } from '@angular/common/http'; // ✅ HttpClientModule 
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  sensors: any[] = [];
+  sensors: Object = [];
   charts: { [key: string]: any } = {};
   liveTimeouts: { [key: string]: any } = {};
   darkMode: boolean = false;
@@ -37,11 +37,11 @@ export class DashboardComponent implements OnInit {
   }
 
   loadSensors() {
+    console.log("AuthTok: ", this.authToken);
     this.sensorService.getSensors(this.authToken!).subscribe(
       (sensors) => {
         this.sensors = sensors;
-        this.sensors.forEach(sensor => this.createSensorCard(sensor));
-      },
+        Object.values(this.sensors).forEach((sensor: any) => this.createSensorCard(sensor));      },
       (error) => console.error("Fehler beim Abrufen der Sensoren", error)
     );
   }
@@ -88,7 +88,7 @@ export class DashboardComponent implements OnInit {
   }
 
   updateSensorData(sensorId: string, valueName: string, ident: string, startOffset: number, endOffset: number) {
-    this.sensorService.getSensorData(sensorId, valueName, startOffset, endOffset).subscribe((data) => {
+    this.sensorService.getSensorData(sensorId, valueName, startOffset, endOffset, this.authToken).subscribe((data) => {
       if (this.charts[ident]) {
         this.charts[ident].data.labels = data.timestamps.map((t: any) => new Date(t).toLocaleTimeString());
         this.charts[ident].data.datasets[0].data = data.values;
@@ -168,4 +168,6 @@ export class DashboardComponent implements OnInit {
       }, 30000);
     });
   }
+
+  protected readonly Object = Object;
 }

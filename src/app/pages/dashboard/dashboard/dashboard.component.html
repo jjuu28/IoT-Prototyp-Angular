@@ -7,7 +7,7 @@
 </header>
 
 <main id="main-dashboard">
-  <div *ngFor="let sensor of sensors" class="grid-item">
+  <div *ngFor="let sensor of Object.values(sensors)" class="grid-item">
     <h3>{{ sensor.valueName }} ({{ sensor.sensorId }})</h3>
     <div style="display: flex; align-items: center;">
       <div [id]="'status-indicator-' + sensor.ident" class="status-indicator"></div>
