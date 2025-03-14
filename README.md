@@ -2,8 +2,7 @@ ToDO:
 
 - Core:
   - Header
-  - Footer
-  - 
+  - Footer 
 
 - Home
   - fehlende Seitenkomponenten:
@@ -17,9 +16,8 @@ ToDO:
     - Sensorübersicht einer Gruppe
     - 
 
-
-
-test
+- Meldungen 
+  - Backend Abfragen
 
 # AngularTest
 
