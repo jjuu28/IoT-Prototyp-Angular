@@ -1,0 +1,8 @@
+{
+  "/agrar": {
+    "target": "https://node-red.studybuddy.top",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}
