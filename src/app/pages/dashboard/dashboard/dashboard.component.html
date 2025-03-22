@@ -1,22 +1,44 @@
 <header>
-  <h1>Dynamic Sensor Dashboard</h1>
-  <p>Visualize real-time and historical sensor data seamlessly.</p>
-  <button (click)="toggleDarkMode()">🌙</button>
-  <button (click)="logout()">Logout</button>
-  <button routerLink="/sensor/add">Sensor hinzufügen</button>
+    <h1>Sensor Dashboard</h1>
+    <p>Live-Daten nach Sensorfeldern gruppiert</p>
+    <button (click)="toggleDarkMode()">🌙 Dark Mode</button>
+    <button (click)="logout()">Logout</button>
 </header>
 
-<main id="main-dashboard">
-  <p *ngIf="!sensors || Object.keys(sensors).length === 0">Keine Sensoren gefunden.</p>
-  <div *ngFor="let sensor of Object.values(sensors)" class="grid-item">
-    <h3>{{ sensor.valueName }} ({{ sensor.sensorId }})</h3>
-    <div style="display: flex; align-items: center;">
-      <div [id]="'status-indicator-' + sensor.ident" class="status-indicator"></div>
-      <button (click)="updateSensorData(sensor.sensorId, sensor.valueName, sensor.ident, -1, 0)">Last Hour</button>
-      <button (click)="enableLiveData(sensor.ident)">Live</button>
-      <button (click)="promptCustomRange(sensor.sensorId, sensor.valueName, sensor.ident)">Custom Range</button>
-    </div>
-    <canvas [id]="'chart-' + sensor.ident"></canvas>
-  </div>
-</main>
+<!-- 🔎 Suchfeld für Sensoren oder Felder -->
+<div class="search-bar">
+    <input type="text" [(ngModel)]="searchQuery" placeholder="Suche nach Sensoren oder Sensorgruppen" />
+    <button>🔍</button>
+</div>
 
+<!-- 📌 Felder-Übersicht (zum Ein- & Ausblenden von Sensorgruppen) -->
+<div class="field-list">
+    <div *ngFor="let fieldName of filterFields()" class="field-card" (click)="toggleFieldGroup(fieldName)">
+        <div class="field-icon">🌿</div>
+        <p>{{ fieldName }}</p>
+    </div>
+</div>
+
+<main id="main-dashboard">
+    <p *ngIf="!sensors || Object.keys(sensors).length === 0">Keine Sensoren gefunden.</p>
+
+    <div *ngFor="let fieldName of Object.keys(sensorGroups)" class="field-group">
+        <h2 (click)="toggleFieldGroup(fieldName)" class="field-title">
+            {{ fieldName }}
+            <button (click)="navigateToFieldPage(fieldName)">📍</button>
+        </h2>
+
+        <div *ngIf="expandedFields[fieldName]" class="sensor-container">
+            <div *ngFor="let sensor of sensorGroups[fieldName]" class="sensor-item">
+                <h3>{{ sensor.valueName }} ({{ sensor.sensorId }})</h3>
+                <div class="sensor-controls">
+                    <div [id]="'status-indicator-' + sensor.ident" class="status-indicator"></div>
+                    <button (click)="updateSensorData(sensor.sensorId, sensor.valueName, sensor.ident, -1, 0)">Last Hour</button>
+                    <button (click)="enableLiveData(sensor.ident)">Live</button>
+                    <button (click)="promptCustomRange(sensor.sensorId, sensor.valueName, sensor.ident)">Custom Range</button>
+                </div>
+                <canvas [id]="'chart-' + sensor.ident"></canvas>
+            </div>
+        </div>
+    </div>
+</main>

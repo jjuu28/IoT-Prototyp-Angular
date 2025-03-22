@@ -7,7 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: DashboardComponent
-  }];
+  },
+  { path: 'field', loadChildren: () => import('./dashboard/sensor-group/sensor-group.module').then(m => m.SensorGroupModule) },
+  { path: 'field/:fieldName', loadChildren: () => import('./dashboard/sensor-group/sensor-group.module').then(m => m.SensorGroupModule)}
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
