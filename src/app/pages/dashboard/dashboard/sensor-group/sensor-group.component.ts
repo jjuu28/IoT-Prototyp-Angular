@@ -62,10 +62,12 @@ export class SensorGroupComponent implements OnInit {
   loadSensorLimits(sensor: any) {
     if (!this.authToken) return;
 
-    this.sensorService.getSensorLimits(sensor.sensorId, this.authToken).subscribe(
+    this.sensorService.getSensorLimits(sensor.sensorId, sensor.valueName, this.authToken).subscribe(
       (data) => {
-        sensor.limitUpper = data.grenzeOben ?? "Nicht gesetzt";
-        sensor.limitLower = data.grenzeUnten ?? "Nicht gesetzt";
+        console.log(data);
+        //data is a object
+        sensor.limitUpper = data.data.grenzeOben ?? "Nicht gesetzt";
+        sensor.limitLower = data.data.grenzeUnten ?? "Nicht gesetzt";
       },
       (error) => console.error(`❌ Fehler beim Abrufen der Limits für ${sensor.sensorId}:`, error)
     );
@@ -75,8 +77,20 @@ export class SensorGroupComponent implements OnInit {
     const upperLimit = prompt("Gib die neue obere Grenze ein:", sensor.limitUpper);
     const lowerLimit = prompt("Gib die neue untere Grenze ein:", sensor.limitLower);
 
+    // Validierung der Eingaben
+    // upperLimit und lowerLimit müssen Zahlen sein und upperLimit muss größer als lowerLimit sein
+    // @ts-ignore
+    if (isNaN(parseFloat(upperLimit)) || isNaN(parseFloat(lowerLimit))) {
+      alert("Bitte gültige Zahlen eingeben!");
+      return;
+    }
+    // @ts-ignore
+    if (parseFloat(upperLimit) <= parseFloat(lowerLimit)) {
+      alert("Die obere Grenze muss größer als die untere Grenze sein!");
+      return;
+    }
     if (upperLimit !== null && lowerLimit !== null) {
-      this.sensorService.updateSensorLimits(sensor.sensorId, parseFloat(upperLimit), parseFloat(lowerLimit), this.authToken).subscribe(
+      this.sensorService.updateSensorLimits(sensor.sensorId, parseFloat(upperLimit), parseFloat(lowerLimit), this.authToken, sensor.valueName).subscribe(
         () => {
           sensor.limitUpper = parseFloat(upperLimit);
           sensor.limitLower = parseFloat(lowerLimit);
@@ -91,19 +105,29 @@ export class SensorGroupComponent implements OnInit {
   loadSensorMessages(sensor: any) {
     if (!this.authToken) return;
 
-    this.sensorService.getSensorMessages(sensor.sensorId, this.authToken).subscribe(
+    this.sensorService.getSensorMessages(sensor.sensorId, sensor.valueName, this.authToken).subscribe(
       (data) => {
-        sensor.messages = data.map((msg: { Meldung: any; MeldungDate: string | number | Date; }) => ({
-          text: msg.Meldung,
-          date: new Date(msg.MeldungDate).toLocaleString()
-        }));
-      },
-      (error) => console.error(`❌ Fehler beim Abrufen der Meldungen für ${sensor.sensorId}:`, error)
+        const messages = Array.isArray(data?.data) ? data.data : [];
+
+        sensor.messages = data.data.map((msg: { Meldung: any; MeldungDate: string | number | Date; }) => {
+          const date = msg.MeldungDate ? new Date(msg.MeldungDate) : null;
+          const formattedDate = date && !isNaN(date.getTime()) ? date.toLocaleString() : 'Keine Meldung';
+
+          return {
+            text: msg.Meldung,
+            date: formattedDate
+          };
+        });
+
+      }
+      ,
+      (error) => console.error(`❌ Fehler beim Abrufen der Meldungen für ${sensor.sensorId}, ${sensor.valueName}:`, error)
     );
   }
 
   deleteSensorMessage(sensor: any) {
-    this.sensorService.deleteSensorMessage(sensor.sensorId, this.authToken).subscribe(
+    console.log("🔄 Lösche Meldung für Sensor:", sensor.sensorId);
+    this.sensorService.deleteSensorMessage(sensor.sensorId, sensor.valueName, this.authToken).subscribe(
       () => {
         sensor.messages = [];
         console.log(`✅ Meldung für ${sensor.sensorId} gelöscht!`);

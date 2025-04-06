@@ -1,12 +1,19 @@
 ToDO:
 
 - Vale ToDos:
-  - in Datenbank limits muss jeder Sensor mit SensorID und ValueName gespeichert werden DONE //sollte fertif sein
-  - überprüfen ob neue Sensoren automatisch in Datenbank Limits aufgenommen werden // sollte fertig sein
+  - Limits und Meldung sollten auch userId abhängig sein (aktuell valueName und sensorId) 
+    - muss im node red bei data safe angepasst werden
+    - muss im node red bei limits überall angepasst werden
+    - muss im frontend angepasst werden
+  
+  - 
+  - überprüfen ob neue Sensoren automatisch in Datenbank Limits aufgenommen werden 
 
   - Gruppenübersicht anpassen
     - Letzte Werte der Sensoren anzeigen
-    - Meldungen anzeigen und löschen
+    - Sensoren bearbeiten können (Standord, Gruppenname??? oder ganz raus)
+    - Gruppennamen anpassen
+    - Sensoren gruppen hinzufügen und entfernen können
 
 - Core:
   - Header
@@ -26,6 +33,7 @@ ToDO:
 
 - Meldungen 
   - Backend Abfragen
+  - Benachrichtigungen
 
 # AngularTest
 
