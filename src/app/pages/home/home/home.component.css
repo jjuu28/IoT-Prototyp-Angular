@@ -2,17 +2,50 @@
   padding: 20px;
 }
 
-.button-group {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
 .alert-box {
   background-color: #ffcccc;
-  padding: 10px;
+  padding: 15px;
   border-left: 5px solid red;
   margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.alert-box h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.message-item {
+  margin-bottom: 10px;
+}
+
+.message-item p {
+  margin: 5px 0;
+}
+
+.message-item strong {
+  color: #721c24; /* Dunkles Rot für die Dringlichkeit */
+}
+
+.all-notifications {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #007bff; /* Blauer Hintergrund */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.all-notifications:hover {
+  background-color: #0056b3; /* Dunkleres Blau beim Hover */
+  transform: scale(1.05); /* Leichte Vergrößerung beim Hover */
+}
+
+.all-notifications:active {
+  transform: scale(0.95); /* Leichte Verkleinerung beim Klicken */
 }
 
 .sensor-changes {
@@ -39,4 +72,16 @@
 .sensor-value {
   font-weight: bold;
   color: #333;
+}
+
+.sensor-status {
+  font-size: 0.8rem;
+  color: #ff0000; /* Rot für Inaktivitätsmeldung */
+  margin-top: 5px;
+}
+
+.sensor-timestamp {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 5px;
 }
