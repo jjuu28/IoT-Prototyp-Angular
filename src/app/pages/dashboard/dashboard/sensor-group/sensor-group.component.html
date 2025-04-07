@@ -7,6 +7,7 @@
   <div class="sensor-list">
     <div *ngFor="let sensor of sensors" class="sensor-card">
       <h3>{{ sensor.valueName }} ({{ sensor.sensorId }})</h3>
+      <p><strong>Letzter Wert:</strong> {{sensor.lastValueString}}</p>
       <p><strong>Feld:</strong> {{ sensor.field_name }}</p>
       <p><strong>Gruppe:</strong> {{ sensor.group_name }}</p>
       <p><strong>Standort:</strong> {{ sensor.location }}</p>
@@ -31,6 +32,7 @@
       </div>
     </div>
   </div>
+
 </div>
 
 <ng-template #noSensors>

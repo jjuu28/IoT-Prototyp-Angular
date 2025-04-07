@@ -5,13 +5,12 @@ ToDO:
     - muss im node red bei data safe angepasst werden
     - muss im node red bei limits überall angepasst werden
     - muss im frontend angepasst werden
-  
-  - 
   - überprüfen ob neue Sensoren automatisch in Datenbank Limits aufgenommen werden 
+
 
   - Gruppenübersicht anpassen
     - Letzte Werte der Sensoren anzeigen
-    - Sensoren bearbeiten können (Standord, Gruppenname??? oder ganz raus)
+    - Sensoren bearbeiten können (Standort, Gruppenname??? oder ganz raus)
     - Gruppennamen anpassen
     - Sensoren gruppen hinzufügen und entfernen können
 

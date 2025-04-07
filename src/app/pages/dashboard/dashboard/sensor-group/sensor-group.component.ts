@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import { SensorService } from '../../../../services/sensor.service';
 import {NgForOf, NgIf} from '@angular/common';
+import {firstValueFrom} from 'rxjs';
 
 @Component({
   selector: 'app-sensor-group',
@@ -52,6 +53,7 @@ export class SensorGroupComponent implements OnInit {
         this.sensors.forEach((sensor: any) => {
           this.loadSensorLimits(sensor);
           this.loadSensorMessages(sensor);
+          this.loadLastSensorValue(sensor);
         });
       },
       (error: any) => console.error("❌ Fehler beim Laden der Sensoren:", error)
@@ -135,4 +137,43 @@ export class SensorGroupComponent implements OnInit {
       (error) => console.error(`❌ Fehler beim Löschen der Meldung für ${sensor.sensorId}:`, error)
     );
   }
+
+  loadLastSensorValue(sensor: any): void {
+    if (!this.authToken) return;
+
+    this.sensorService.getLatestData(sensor.sensorId, sensor.valueName, this.authToken).subscribe(
+      (data) => {
+        const values = Array.isArray(data?.values) ? data.values : [];
+        const timestamps = Array.isArray(data?.timestamps) ? data.timestamps : [];
+
+        if (values.length > 0 && timestamps.length > 0) {
+          const value = values[0] ?? "Keine Daten";
+          const timestamp = timestamps[0] ? new Date(timestamps[0]) : null;
+
+          let formattedTimestamp = "Kein Zeitstempel";
+
+          if (timestamp && !isNaN(timestamp.getTime())) {
+            const day = timestamp.getDate();
+            const month = timestamp.getMonth() + 1; // Monat ist 0-indexed
+            const year = timestamp.getFullYear().toString().slice(-2); // letzte zwei Stellen
+            const hours = timestamp.getHours().toString().padStart(2, '0');
+            const minutes = timestamp.getMinutes().toString().padStart(2, '0');
+
+            //formattedTimestamp = `${day}.${month}.${year}, ${hours}:${minutes}`;
+            formattedTimestamp = `${hours}:${minutes}, ${day}.${month}.${year}`;
+          }
+
+          sensor.lastValueString = `${value} um ${formattedTimestamp}`;
+        } else {
+          sensor.lastValueString = "Keine Daten";
+        }
+      },
+      (error) => {
+        console.error(`❌ Fehler beim Abrufen des letzten Wertes für ${sensor.sensorId}, ${sensor.valueName}:`, error);
+        sensor.lastValueString = "Fehler";
+      }
+    );
+  }
+
+
 }

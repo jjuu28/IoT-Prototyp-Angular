@@ -64,6 +64,17 @@ export class SensorService {
     return this.http.get<SensorDataResponse>(`${this.apiUrl}/data/last?sensorId=${sensorId}&valueName=${valueName}&hoursAgo=${hoursAgo}`, { headers });
   }
 
+  getLatestData(sensorId: string, valueName: string, token: string | null): Observable<SensorDataResponse> {
+    if (!token) {
+      return new Observable();
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + token
+    });
+    return this.http.get<SensorDataResponse>(`${this.apiUrl}/data/last?sensorId=${sensorId}&valueName=${valueName}`, { headers });
+  }
+
   getLastDataFifteen(sensorId: string, valueName: string, token: string | null): Observable<SensorDataResponse> {
     if (!token) {
       return new Observable();
@@ -117,4 +128,53 @@ export class SensorService {
 
     return this.http.delete(`${this.apiUrl}/limits/meldung?sensorId=${sensorId}&valueName=${valueName}`, { headers });
   }
+
+
+  getAllFields(token: string | null): Observable<any> {
+    if (!token) return new Observable();
+
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + token
+    });
+
+    return this.http.get(`${this.apiUrl}/fields`, { headers });
+  }
+
+  changeSensorLocation(sensorId: string, location: string, token: string | null): Observable<any> {
+    if (!token) return new Observable();
+
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json'
+    });
+
+    const payload = { sensorId, location };
+    return this.http.put(`${this.apiUrl}/sensor/location`, payload, { headers });
+
+  }
+
+  changeSensorField(sensorId: string, fieldName: string, token: string | null): Observable<any> {
+    if (!token) return new Observable();
+
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json'
+    });
+
+    const payload = { sensorId, fieldName };
+    return this.http.put(`${this.apiUrl}/sensor/sensorField`, payload, { headers });
+  }
+
+  changeFieldName(old_field_name: string, new_field_name: string, token: string | null): Observable<any> {
+    if (!token) return new Observable();
+
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json'
+    });
+
+    const payload = { old_field_name, new_field_name };
+    return this.http.put(`${this.apiUrl}/field`, payload, { headers });
+  }
+
 }
