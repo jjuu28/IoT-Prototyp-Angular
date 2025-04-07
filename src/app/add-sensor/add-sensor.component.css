@@ -1,0 +1,73 @@
+.add-sensor-container {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #f1f8e9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+}
+
+.field-dropdown {
+  position: relative;
+  margin-top: 20px;
+}
+
+.field-input {
+  padding: 8px;
+  width: 100%;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-top: 5px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: #4caf50;
+  box-shadow: 0 0 3px rgba(76, 175, 80, 0.5);
+}
+
+.dropdown-list {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  width: 100%;
+  max-height: 150px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  z-index: 10;
+  border-radius: 5px;
+}
+
+.dropdown-list li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.dropdown-list li:hover {
+  background-color: #e0f2f1;
+}

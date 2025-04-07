@@ -191,9 +191,8 @@ export class SensorService {
     return this.http.delete(`${this.apiUrl}/field`, { headers, body: payload });
   }
 
-  addSensor(sensorId: string, fieldName: string, authToken: string | null): Observable<any> {
+  addSensor(sensorId: string, authToken: string | null): Observable<any> {
     if (!authToken) return new Observable();
-    this.changeSensorField(sensorId, fieldName, authToken);
     const payload = { sensorId };
     const headers = new HttpHeaders({
       'Authorization': 'Bearer ' + authToken, // falls du Token brauchst

@@ -1,0 +1,34 @@
+<div class="add-sensor-container">
+  <h2>➕ Neuen Sensor hinzufügen</h2>
+
+  <div class="form-group">
+    <label for="sensorId">Sensor ID</label>
+    <input id="sensorId" [(ngModel)]="sensorId" placeholder="Sensor ID eingeben" />
+  </div>
+
+  <div class="field-dropdown">
+    <label for="fieldName">🌾 Feldname</label>
+    <input type="text"
+           id="fieldName"
+           [(ngModel)]="fieldName"
+           (focus)="showDropdown = true"
+           (input)="filterFields()"
+           (blur)="hideDropdown()"
+           placeholder="Feldname eingeben oder wählen"
+           class="field-input" />
+
+    <ul *ngIf="showDropdown && filteredFields?.length" class="dropdown-list">
+      <li *ngFor="let field of filteredFields"
+          (mousedown)="selectField(field.field_name)">
+        {{ field.field_name }}
+      </li>
+    </ul>
+  </div>
+
+
+  <button (click)="addSensor()">Sensor hinzufügen</button>
+  <p *ngIf="message">{{ message }}</p>
+
+  <p></p>
+  <button (click)="navigateToDashboard()">Zurück zum Dashboard</button>
+</div>
