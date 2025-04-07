@@ -9,7 +9,8 @@ const routes: Routes = [
     component: DashboardComponent
   },
   { path: 'field', loadChildren: () => import('./dashboard/sensor-group/sensor-group.module').then(m => m.SensorGroupModule) },
-  { path: 'field/:fieldName', loadChildren: () => import('./dashboard/sensor-group/sensor-group.module').then(m => m.SensorGroupModule)}
+  { path: 'field/:fieldName', loadChildren: () => import('./dashboard/sensor-group/sensor-group.module').then(m => m.SensorGroupModule)},
+  { path: 'add-sensor', loadChildren: () => import('../../add-sensor/add-sensor.module').then(m => m.AddSensorModule) }
 ];
 
 @NgModule({

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, RouterLink} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { SensorService } from '../../../../services/sensor.service';
 import {NgForOf, NgIf} from '@angular/common';
 import {firstValueFrom} from 'rxjs';
@@ -22,8 +22,9 @@ export class SensorGroupComponent implements OnInit {
   sensorGroups: { [key: string]: any[] } = {};
   authToken: string | null = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
   allFields: any;
+  newFieldName: any;
 
-  constructor(private route: ActivatedRoute, private sensorService: SensorService) {}
+  constructor(private route: ActivatedRoute, private sensorService: SensorService,private router: Router) {}
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -58,6 +59,8 @@ export class SensorGroupComponent implements OnInit {
           this.loadSensorLimits(sensor);
           this.loadSensorMessages(sensor);
           this.loadLastSensorValue(sensor);
+          sensor.filteredFields = this.allFields; // Anfangszustand = alles zeigen
+          sensor.showDropdown = false;
           console.log(sensor)
         });
       },
@@ -106,9 +109,14 @@ export class SensorGroupComponent implements OnInit {
         (error) => console.error(`❌ Fehler beim Aktualisieren der Grenzwerte für ${sensor.sensorId}:`, error)
       );
     }
+    //page reload
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   }
 
   // 🆕 Sensor-Meldungen abrufen
+
   loadSensorMessages(sensor: any) {
     if (!this.authToken) return;
 
@@ -141,6 +149,10 @@ export class SensorGroupComponent implements OnInit {
       },
       (error) => console.error(`❌ Fehler beim Löschen der Meldung für ${sensor.sensorId}:`, error)
     );
+    //page reload
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   }
 
   loadLastSensorValue(sensor: any): void {
@@ -192,6 +204,10 @@ export class SensorGroupComponent implements OnInit {
       sensor.location = sensor.newLocation;
       alert("Standort aktualisiert!");
     });
+    //page reload
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   }
 
   updateField(sensor: any) {
@@ -199,6 +215,59 @@ export class SensorGroupComponent implements OnInit {
       sensor.field_name = sensor.newFieldName;
       alert("Feld aktualisiert!");
     });
+    //page reload
+    setTimeout(() => {
+      this.router.navigate(['/dashboard/field/', sensor.newFieldName]);
+    }, 1000);
+  }
+
+  renameField() {
+    this.sensorService.changeFieldName(this.fieldName, this.newFieldName, this.authToken).subscribe(() => {
+      alert("Feldname wurde geändert!");
+      this.loadAllFields(); // Update Dropdown
+    });
+    //timeout for 1 second
+    setTimeout(() => {
+      this.router.navigate(['/dashboard/field/', this.newFieldName]);
+    }, 1000);
+
+  }
+
+  deleteField() {
+    //Feld wirklich löschen?
+    if (!confirm("Sind Sie sicher, dass Sie das Feld löschen möchten?\n" +
+      "Die Sensoren werden in das Feld 'Unbekanntes Feld' verschoben!")) {
+      return;
+    }
+    this.sensorService.deleteField(this.fieldName, this.authToken).subscribe(() => {
+      alert("Feld wurde gelöscht!");
+    });
+    //timeout for 1 second
+    setTimeout(() => {
+      this.router.navigate(['/dashboard/field/Unbekanntes Feld']);
+    }, 1000);
+  }
+
+  filterFields(sensor: any) {
+    const term = sensor.newFieldName?.toLowerCase() || '';
+    sensor.filteredFields = this.allFields.filter((field: any) =>
+      field.field_name.toLowerCase().includes(term)
+    );
+
+    sensor.showDropdown = true;
+    console.log('All fields:', this.allFields);
+
+  }
+
+  selectField(sensor: any, name: string) {
+    sensor.newFieldName = name;
+    sensor.showDropdown = false;
+  }
+
+  hideDropdown(sensor: any) {
+    setTimeout(() => {
+      sensor.showDropdown = false;
+    }, 150); // kleiner Delay für Klick
   }
 
 

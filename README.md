@@ -7,12 +7,14 @@ ToDO:
     - muss im frontend angepasst werden
   - überprüfen ob neue Sensoren automatisch in Datenbank Limits aufgenommen werden 
 
+  - add sensor (done)
+    - überprüfen ob Sensor überhaupt existiert
+    
+  - remove sensor
+    - Backend anpassen
+    - Frontend implementieren
+  
 
-  - Gruppenübersicht anpassen
-    - Letzte Werte der Sensoren anzeigen
-    - Sensoren bearbeiten können (Standort, Gruppenname??? oder ganz raus)
-    - Gruppennamen anpassen
-    - Sensoren gruppen hinzufügen und entfernen können
 
 - Core:
   - Header

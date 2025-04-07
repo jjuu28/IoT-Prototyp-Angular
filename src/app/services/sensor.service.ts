@@ -178,4 +178,29 @@ export class SensorService {
     return this.http.put(`${this.apiUrl}/field`, payload, { headers });
   }
 
+
+  deleteField(field_name: string, authToken: string | null) {
+    if (!authToken) return new Observable();
+
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + authToken,
+      'Content-Type': 'application/json'
+    });
+
+    const payload = { field_name };
+    return this.http.delete(`${this.apiUrl}/field`, { headers, body: payload });
+  }
+
+  addSensor(sensorId: string, fieldName: string, authToken: string | null): Observable<any> {
+    if (!authToken) return new Observable();
+    this.changeSensorField(sensorId, fieldName, authToken);
+    const payload = { sensorId };
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + authToken, // falls du Token brauchst
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post(`${this.apiUrl}/sensor/add`, payload, { headers });
+  }
+
 }

@@ -271,4 +271,15 @@ export class DashboardComponent implements OnInit {
   }
 
   protected readonly Object = Object;
+
+  navigateToAddSensor() {
+    this.router.navigate(['/dashboard/add-sensor']).then(success => {
+      if (success) {
+        console.log("✅ Navigation erfolgreich!");
+      } else {
+        console.error("❌ Navigation fehlgeschlagen!");
+      }
+    });
+
+  }
 }

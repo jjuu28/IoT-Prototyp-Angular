@@ -3,6 +3,12 @@
   <button routerLink="/dashboard">⬅ Zurück zum Dashboard</button>
 </header>
 
+<div class="rename-field-container">
+  <h3>📝 Feldnamen ändern</h3>
+  <input [(ngModel)]="newFieldName" placeholder="New Field name" />
+  <button (click)="renameField()">Umbenennen</button>
+  <button (click)="deleteField()">Feld löschen</button>
+</div>
 <div *ngIf="sensors.length > 0; else noSensors">
   <div class="sensor-list">
     <div *ngFor="let sensor of sensors" class="sensor-card">
@@ -37,17 +43,34 @@
       </div>
 
       <!-- ✏️ Feld ändern -->
-      <div class="sensor-data">
+      <div class="sensor-data field-dropdown">
         <label>🌾 Feld ändern:</label>
-        <select [(ngModel)]="sensor.newFieldName">
-          <option *ngFor="let field of allFields" [value]="field.field_name">{{ field.field_name }}</option>
-        </select>
+        <input type="text"
+               [(ngModel)]="sensor.newFieldName"
+               (focus)="sensor.showDropdown = true"
+               (input)="filterFields(sensor)"
+               (blur)="hideDropdown(sensor)"
+               placeholder="Feldname eingeben oder wählen" />
+
+        <ul *ngIf="sensor.showDropdown && sensor.filteredFields?.length" class="dropdown-list">
+          <li *ngFor="let field of sensor.filteredFields"
+              (mousedown)="selectField(sensor, field.field_name)">
+            {{ field.field_name }}
+          </li>
+        </ul>
+
         <button (click)="updateField(sensor)">Aktualisieren</button>
       </div>
+
+
+
+
+
     </div>
 
   </div>
   </div>
+
 
 <ng-template #noSensors>
   <p>❌ Keine Sensoren in dieser Gruppe gefunden.</p>
