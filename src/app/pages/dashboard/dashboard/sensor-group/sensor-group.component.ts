@@ -3,6 +3,7 @@ import {ActivatedRoute, RouterLink} from '@angular/router';
 import { SensorService } from '../../../../services/sensor.service';
 import {NgForOf, NgIf} from '@angular/common';
 import {firstValueFrom} from 'rxjs';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-sensor-group',
@@ -10,7 +11,8 @@ import {firstValueFrom} from 'rxjs';
   imports: [
     RouterLink,
     NgForOf,
-    NgIf
+    NgIf,
+    FormsModule
   ],
   styleUrls: ['./sensor-group.component.css']
 })
@@ -19,6 +21,7 @@ export class SensorGroupComponent implements OnInit {
   sensors: any = {};
   sensorGroups: { [key: string]: any[] } = {};
   authToken: string | null = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+  allFields: any;
 
   constructor(private route: ActivatedRoute, private sensorService: SensorService) {}
 
@@ -26,6 +29,7 @@ export class SensorGroupComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.fieldName = params['fieldName'];
       this.loadSensors();
+      this.loadAllFields();
     });
   }
 
@@ -54,6 +58,7 @@ export class SensorGroupComponent implements OnInit {
           this.loadSensorLimits(sensor);
           this.loadSensorMessages(sensor);
           this.loadLastSensorValue(sensor);
+          console.log(sensor)
         });
       },
       (error: any) => console.error("❌ Fehler beim Laden der Sensoren:", error)
@@ -173,6 +178,27 @@ export class SensorGroupComponent implements OnInit {
         sensor.lastValueString = "Fehler";
       }
     );
+  }
+
+  loadAllFields() {
+    this.sensorService.getAllFields(this.authToken).subscribe(fields => {
+      this.allFields = fields.fields;
+      console.log("Felder:", this.allFields);
+    });
+  }
+
+  updateLocation(sensor: any) {
+    this.sensorService.changeSensorLocation(sensor.sensorId, sensor.newLocation, this.authToken).subscribe(() => {
+      sensor.location = sensor.newLocation;
+      alert("Standort aktualisiert!");
+    });
+  }
+
+  updateField(sensor: any) {
+    this.sensorService.changeSensorField(sensor.sensorId, sensor.newFieldName, this.authToken).subscribe(() => {
+      sensor.field_name = sensor.newFieldName;
+      alert("Feld aktualisiert!");
+    });
   }
 
 

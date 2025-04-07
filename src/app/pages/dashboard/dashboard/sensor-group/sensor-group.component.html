@@ -30,10 +30,24 @@
         </ul>
         <button (click)="deleteSensorMessage(sensor)">Meldungen löschen</button>
       </div>
-    </div>
-  </div>
+      <div class="sensor-data">
+        <label>📍 Standort ändern:</label>
+        <input [(ngModel)]="sensor.newLocation" placeholder="Neuer Standort" />
+        <button (click)="updateLocation(sensor)">Aktualisieren</button>
+      </div>
 
-</div>
+      <!-- ✏️ Feld ändern -->
+      <div class="sensor-data">
+        <label>🌾 Feld ändern:</label>
+        <select [(ngModel)]="sensor.newFieldName">
+          <option *ngFor="let field of allFields" [value]="field.field_name">{{ field.field_name }}</option>
+        </select>
+        <button (click)="updateField(sensor)">Aktualisieren</button>
+      </div>
+    </div>
+
+  </div>
+  </div>
 
 <ng-template #noSensors>
   <p>❌ Keine Sensoren in dieser Gruppe gefunden.</p>

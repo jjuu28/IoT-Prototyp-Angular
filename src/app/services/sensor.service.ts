@@ -141,6 +141,7 @@ export class SensorService {
   }
 
   changeSensorLocation(sensorId: string, location: string, token: string | null): Observable<any> {
+    console.log("Changing sensor location");
     if (!token) return new Observable();
 
     const headers = new HttpHeaders({
