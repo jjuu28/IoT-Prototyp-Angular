@@ -1,18 +1,7 @@
 ToDO:
 
 - Vale ToDos:
-  - Limits und Meldung sollten auch userId abhängig sein (aktuell valueName und sensorId) 
-    - muss im node red bei data safe angepasst werden
-    - muss im node red bei limits überall angepasst werden
-    - muss im frontend angepasst werden
-  - überprüfen ob neue Sensoren automatisch in Datenbank Limits aufgenommen werden 
 
-  - add sensor (done)
-    - überprüfen ob Sensor überhaupt existiert
-    
-  - remove sensor
-    - Backend anpassen
-    - Frontend implementieren
   
 
 
@@ -26,14 +15,9 @@ ToDO:
     - Sensorinfos
     - 
 
-- Dashboard
-  -  fehlende Seitenkomponenten:
-    - Sensorinfos
-    - Sensorübersicht einer Gruppe
-    - 
 
-- Meldungen 
-  - Backend Abfragen
+
+- Meldungen  
   - Benachrichtigungen
 
 # AngularTest
