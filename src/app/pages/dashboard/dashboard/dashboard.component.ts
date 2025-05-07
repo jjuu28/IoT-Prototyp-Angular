@@ -5,6 +5,9 @@ import {Router} from '@angular/router';
 import Chart from 'chart.js/auto';
 import { NgForOf, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
+import annotationPlugin from 'chartjs-plugin-annotation';
+Chart.register(annotationPlugin);
+
 
 
 @Component({
@@ -102,29 +105,113 @@ export class DashboardComponent implements OnInit {
       const lineColor = isDarkMode ? '#9c27b0' : '#03a9f4';
       const backgroundColor = isDarkMode ? 'rgba(156, 39, 176, 0.2)' : 'rgba(3, 169, 244, 0.2)';
 
-      this.charts[sensor.ident] = new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: [],
-          datasets: [{
-            label: `${sensor.valueName} (${sensor.unit})`,
-            data: [],
-            borderColor: lineColor,
-            backgroundColor: backgroundColor,
-            borderWidth: 2
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: { x: { display: true }, y: { display: true } }
-        }
-      });
+      // Hole die Sensorgrenzen
+      this.sensorService.getSensorLimits(sensor.sensorId, sensor.valueName, this.authToken!).subscribe(
+        (resp) => {
+          const limits = resp.data;
+          console.log("📏 Geladene Grenzwerte für", sensor.ident, ":", limits);
 
-      // **Live-Status-Indikator initialisieren**
-      this.updateStatusIndicator(sensor.ident, 'gray');
+          const annotations: any = {};
+
+          if (limits?.grenzeOben != null) {
+            annotations['grenzeOben'] = {
+              type: 'line',
+              yMin: limits.grenzeOben,
+              yMax: limits.grenzeOben,
+              borderColor: 'red',
+              borderWidth: 2,
+              label: {
+                content: 'Grenze Oben',
+                display: false,
+                position: 'end',
+                color: 'red',
+                backgroundColor: 'white'
+              }
+            };
+          }
+
+          if (limits?.grenzeUnten != null) {
+            annotations['grenzeUnten'] = {
+              type: 'line',
+              yMin: limits.grenzeUnten,
+              yMax: limits.grenzeUnten,
+              borderColor: 'red',
+              borderWidth: 2,
+              label: {
+                content: 'Grenze Unten',
+                display: false,
+                position: 'start',
+                color: 'red',
+                backgroundColor: 'white'
+              }
+            };
+          }
+
+          // Erstelle das Chart mit Annotations (auch wenn leer)
+          this.charts[sensor.ident] = new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: [],
+              datasets: [{
+                label: `${sensor.valueName} (${sensor.unit})`,
+                data: [],
+                borderColor: lineColor,
+                backgroundColor: backgroundColor,
+                borderWidth: 2
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                annotation: {
+                  annotations: annotations
+                }
+              },
+              scales: {
+                x: { display: true },
+                y: { display: true }
+              }
+            },
+            plugins: [annotationPlugin]
+          });
+
+          this.updateStatusIndicator(sensor.ident, 'gray');
+        },
+        (err) => {
+          console.warn("⚠️ Keine Limits für Sensor", sensor.sensorId);
+
+          // Fallback: Chart ohne Annotations
+          this.charts[sensor.ident] = new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: [],
+              datasets: [{
+                label: `${sensor.valueName} (${sensor.unit})`,
+                data: [],
+                borderColor: lineColor,
+                backgroundColor: backgroundColor,
+                borderWidth: 2
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                x: { display: true },
+                y: { display: true }
+              }
+            }
+          });
+
+          this.updateStatusIndicator(sensor.ident, 'gray');
+        }
+      );
     }, 100);
   }
+
+
+
 
   toggleFieldGroup(fieldName: string) {
     this.expandedFields[fieldName] = !this.expandedFields[fieldName];
