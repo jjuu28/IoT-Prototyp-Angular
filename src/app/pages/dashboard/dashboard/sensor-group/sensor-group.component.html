@@ -12,7 +12,7 @@
 <div *ngIf="sensors.length > 0; else noSensors">
   <div class="sensor-list">
     <div *ngFor="let sensor of sensors" class="sensor-card">
-      <h3>{{ sensor.valueName }} ({{ sensor.sensorId }})</h3>
+      <h3>{{ sensor.valueName }} ({{ sensor.sensorId }})</h3> <button (click)="removeSensor(sensor)">Sensor entfernen</button>
       <p><strong>Letzter Wert:</strong> {{sensor.lastValueString}}</p>
       <p><strong>Feld:</strong> {{ sensor.field_name }}</p>
       <p><strong>Gruppe:</strong> {{ sensor.group_name }}</p>

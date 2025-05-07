@@ -271,4 +271,18 @@ export class SensorGroupComponent implements OnInit {
   }
 
 
+  removeSensor(sensor: any) {
+    //Feld wirklich löschen?
+    if (!confirm("Sind Sie sicher, dass Sie den Sensor löschen möchten? Die Daten bleiben erhalten. Alle Sensoren mit dieser Sensor ID werden gelöscht!")) {
+      return;
+    }
+    this.sensorService.deleteSensor(sensor.sensorId, this.authToken).subscribe(() => {
+      alert("Sensor wurde gelöscht!");
+    });
+    //kurzer timeout und aktualisieren
+    setTimeout(() => {
+      window.location.reload();
+    }, 300);
+
+  }
 }

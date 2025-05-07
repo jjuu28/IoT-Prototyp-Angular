@@ -202,4 +202,16 @@ export class SensorService {
     return this.http.post(`${this.apiUrl}/sensor/add`, payload, { headers });
   }
 
+  deleteSensor(sensorId: any, authToken: string | null) {
+    if (!authToken) return new Observable();
+
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + authToken,
+      'Content-Type': 'application/json'
+    });
+
+    const payload = { sensorId };
+    return this.http.delete(`${this.apiUrl}/sensor/delete`, { headers, body: payload });
+
+  }
 }
