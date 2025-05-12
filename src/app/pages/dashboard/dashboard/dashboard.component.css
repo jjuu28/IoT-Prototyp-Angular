@@ -141,3 +141,28 @@ canvas {
   border: none;
   cursor: pointer;
 }
+
+.settings-btn {
+  border:none;background:transparent;font-size:1.4rem;cursor:pointer;
+}
+
+.ds-panel {
+  position:fixed; top:4.5rem; right:1rem; z-index:10;
+  width:230px; padding:1rem 1.2rem; border-radius:1rem;
+  backdrop-filter:blur(14px); background:rgba(255,255,255,0.15);
+  box-shadow:0 8px 20px rgba(0,0,0,0.25);
+  opacity:0; pointer-events:none; transform:translateY(-10px);
+  transition: all .25s ease;
+  &.visible { opacity:1; pointer-events:auto; transform:none; }
+  h4 { margin-top:0; font-size:1.1rem; }
+  .value { font-weight:600; text-align:right; margin-top:0.2rem; }
+}
+
+/* Minimalistischer Toggle‑Switch */
+.switch { position:relative; display:inline-block; width:46px; height:24px; margin-right:0.5rem;}
+.switch input { opacity:0; width:0; height:0; }
+.slider { position:absolute; cursor:pointer; inset:0; background:#ccc; transition:.3s; border-radius:34px;}
+.slider:before {content:""; position:absolute; height:18px; width:18px; left:3px; bottom:3px; background:white; transition:.3s; border-radius:50%;}
+input:checked + .slider {background:#4caf50;}
+input:checked + .slider:before { transform:translateX(22px);}
+

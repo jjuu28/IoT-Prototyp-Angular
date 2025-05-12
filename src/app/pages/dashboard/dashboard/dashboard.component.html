@@ -4,7 +4,29 @@
     <button (click)="toggleDarkMode()">🌙 Dark Mode</button>
     <button (click)="logout()">Logout</button>
     <button (click)="navigateToAddSensor()">➕ Add Sensor</button> <!-- NEU -->
+    <!-- ⚙️ Settings‑Button im Header -->
+    <button class="settings-btn" (click)="showDsPanel = !showDsPanel">⚙️</button>
 
+    <!-- ▸ Floating‑Panel -->
+    <div class="ds-panel" [class.visible]="showDsPanel">
+      <h4>Downsampling</h4>
+
+      <!-- Switch -->
+      <label class="switch">
+        <input type="checkbox" [(ngModel)]="downsampleEnabled">
+        <span class="slider round"></span>
+      </label>
+      <span>{{ downsampleEnabled ? 'Aktiv' : 'Aus' }}</span>
+
+      <!-- Slider -->
+      <input type="range"
+             min="5" max="500" step="5"
+             [(ngModel)]="maxPoints"
+             [disabled]="!downsampleEnabled">
+      <div class="value">{{ maxPoints }} Punkte</div>
+
+      <button (click)="applyDownsampleSettings()">✔ Übernehmen</button>
+    </div>
 </header>
 
 <!-- 🔎 Suchfeld für Sensoren oder Felder -->
