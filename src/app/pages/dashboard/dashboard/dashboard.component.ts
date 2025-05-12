@@ -273,6 +273,7 @@ export class DashboardComponent implements OnInit {
           chart.data.labels           = timestamps.map(t =>
             new Date(t).toLocaleTimeString());
           chart.data.datasets[0].data = values;
+          this.addDayChangeAnnotations(chart, timestamps);
           chart.update();
         }
 
@@ -406,5 +407,54 @@ export class DashboardComponent implements OnInit {
     }
     return { timestamps: ts, values: vs };
   }
+
+  /** Fügt für jeden Tageswechsel eine gestrichelte Linie + Label ein */
+  addDayChangeAnnotations(
+    chart: Chart,
+    timestamps: (number | string | Date)[]
+  ) {
+    if (!chart.options.plugins!.annotation) {
+      chart.options.plugins!.annotation = { annotations: {} };
+    }
+    const annos: any = chart.options.plugins!.annotation.annotations;
+
+    let lastDay = '';
+    timestamps.forEach((t, idx) => {
+      const d = new Date(t);
+      const dayKey = d.toISOString().substring(0, 10);   // YYYY‑MM‑DD
+
+      if (idx > 0 && dayKey !== lastDay) {
+        annos[`day_${dayKey}`] = {
+          type: 'line',
+
+          /* ①  Vor den Datensätzen, also hinter ihnen, zeichnen */
+          drawTime: 'beforeDatasetsDraw',   // <— wichtig
+          // oder zusätzlich/alternativ:
+          z: -10,                           // ganz nach hinten im Zeichen‑Stack
+
+          xMin: idx - 0.5,
+          xMax: idx - 0.5,
+          borderColor: this.darkMode ? '#aaaaaa' : '#666666',
+          borderWidth: 1,
+          borderDash: [6, 6],
+
+          label: {
+            display: true,
+            content: d.toLocaleDateString(),   // 12.05.2025
+            position: 'start',
+            rotation: 0,
+            yAdjust: -6,
+            /* ②  Hintergrund völlig durchsichtig */
+            backgroundColor: 'rgba(0,0,0,0)',  // oder leicht transparent
+            color: this.darkMode ? '#bbb' : '#444',
+            font: { style: 'italic', size: 10 }
+          }
+        };
+
+      }
+      lastDay = dayKey;
+    });
+  }
+
 
 }
