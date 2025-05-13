@@ -1,0 +1,62 @@
+
+<div class="custom-range-sheet">
+  <div class="header">
+    <h3>Custom Range auswählen</h3>
+    <button mat-icon-button (click)="sheetRef.dismiss()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="presets">
+    <button mat-button *ngFor="let p of presets" (click)="applyPreset(p)">
+      {{ p.label }}
+    </button>
+  </div>
+
+  <mat-form-field appearance="fill" class="date-range">
+    <mat-label>Datum</mat-label>
+
+    <!-- 1) Range-Input mit rangePicker -->
+    <mat-date-range-input [rangePicker]="picker">
+      <input
+        matStartDate
+        matInput
+        placeholder="Startdatum"
+        [(ngModel)]="startDate"
+        (ngModelChange)="onDateChange()">
+      <input
+        matEndDate
+        matInput
+        placeholder="Enddatum"
+        [(ngModel)]="endDate"
+        (ngModelChange)="onDateChange()">
+    </mat-date-range-input>
+
+    <!-- 2) Toggle, referenziert jetzt korrekt das Picker-Objekt -->
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+
+    <!-- 3) Picker mit exportAs -->
+    <mat-date-range-picker #picker="matDateRangePicker"></mat-date-range-picker>
+  </mat-form-field>
+
+  <div class="time-slider">
+    <label>
+      Von {{ formatDate(startTimestamp).toLocaleString() }}
+      bis {{ formatDate(endTimestamp).toLocaleString() }}
+    </label>
+
+    <div class="time-slider-ngx">
+      <ngx-slider
+        [options]="sliderOptions"
+        [(value)]="startTimestamp"
+        [(highValue)]="endTimestamp"
+        (userChangeEnd)="onSliderChange()">
+      </ngx-slider>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button mat-stroked-button (click)="reset()">Zurücksetzen</button>
+    <button mat-flat-button color="primary" (click)="confirm()">Anwenden</button>
+  </div>
+</div>

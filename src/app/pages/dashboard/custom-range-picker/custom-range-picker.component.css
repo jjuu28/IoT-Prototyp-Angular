@@ -1,0 +1,15 @@
+.custom-range-sheet {
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.8);
+  border-radius: 16px 16px 0 0;
+  padding: 16px;
+}
+.header { display:flex; justify-content: space-between; align-items:center; }
+.presets { display:flex; gap:8px; flex-wrap: wrap; margin:8px 0; }
+.presets button { font-size: 0.85rem; }
+.date-range { width: 100%; }
+.time-slider { margin:16px 0; }
+.actions { display:flex; justify-content: space-between; }
