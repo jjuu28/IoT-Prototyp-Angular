@@ -32,6 +32,7 @@ interface Preset { label: string; startOffsetH: number; endOffsetH: number; }
   styleUrls: ['./custom-range-picker.component.css'],
 })
 export class CustomRangePickerComponent {
+  private ZOOM_MARGIN_MIN = 5 * 60 * 1000;
   startDate = new Date();
   endDate = new Date();
   // Slider-Werte als Millisekunden seit Epoch
@@ -39,7 +40,15 @@ export class CustomRangePickerComponent {
   endTimestamp   = this.endDate.getTime();
 
   formatDate(timestamp: number): string {
-    return new Date(timestamp).toLocaleString();
+    // Formatierung: HH:mm Uhr - DD.MM.YYYY
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${hours}:${minutes} Uhr ${day}.${month}.${year}`;
+    //return new Date(timestamp).toLocaleString();
   }
   presets: Preset[] = [
     { label: 'Letzte 10 Minuten', startOffsetH:  -0.1, endOffsetH: 0 },
@@ -51,7 +60,7 @@ export class CustomRangePickerComponent {
   // Optionen für ngx-slider
   sliderOptions: Options = {
     //floor bis 0 Uhr als Startwert, uabhängig der aktuellen Zeit also heutiges uhrzeit + datum minus uhrzeit sodass auf 0 uhr
-    floor: this.startDate.getTime() - this.startDate.getHours() * 60 * 60 * 1000 - this.startDate.getMinutes() * 60 * 1000 - this.startDate.getSeconds() * 1000,
+    floor: this.startOfDay(this.startDate).getTime(),
     ceil:  this.endDate.getTime(),
     step:  60 * 1000,   // 1 Minute in ms
     translate: (value: number) => {
@@ -79,6 +88,45 @@ export class CustomRangePickerComponent {
       floor: startOfDay.getTime(),
       ceil:  endOfDay.getTime()
     };
+    this.updateZoomRange();
+  }
+
+  private updateZoomRange() {
+    const range = this.endTimestamp - this.startTimestamp;
+    // Puffer entweder 10% der Spanne oder mindestens 5 Min.
+    const margin = Math.max(range * 0.9, this.ZOOM_MARGIN_MIN);
+
+    const newFloor = this.startTimestamp - margin;
+    const newCeil  = this.endTimestamp   + margin;
+
+    this.sliderOptions = {
+      ...this.sliderOptions,
+      floor: newFloor,
+      ceil:  newCeil
+    };
+  }
+
+  //setzt die zoomrange wieder auf 0 Uhr bis aktuelle Zeit
+  private resetZoomRange(){
+    const startOfDay = new Date(this.startDate);
+    startOfDay.setHours(0,0,0,0);
+    const endOfDay   = new Date();
+
+    this.startTimestamp = startOfDay.getTime();
+    this.endTimestamp   = endOfDay.getTime();
+
+    this.sliderOptions = {
+      ...this.sliderOptions,
+      floor: startOfDay.getTime(),
+      ceil:  endOfDay.getTime()
+    };
+  }
+
+  private startOfDay(d: Date) {
+    const s = new Date(d); s.setHours(0,0,0,0); return s;
+  }
+  private endOfDay(d: Date) {
+    const e = new Date(d); e.setHours(23,59,59,999); return e;
   }
 
   constructor(public sheetRef: MatBottomSheetRef<CustomRangePickerComponent>) {}
@@ -87,6 +135,7 @@ export class CustomRangePickerComponent {
 
   onSliderChange() {
     // Hier Live-Vorschau aktualisieren (z.B. Chart-Annotationen)
+    this.updateZoomRange();
   }
 
   formatTime(mins: number): string {
@@ -122,6 +171,7 @@ export class CustomRangePickerComponent {
 
   reset() {
     this.applyPreset({ label: '', startOffsetH: -24, endOffsetH: 0 });
+    this.resetZoomRange()
   }
 
 }
