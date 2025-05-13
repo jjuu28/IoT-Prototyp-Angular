@@ -9,6 +9,7 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 Chart.register(annotationPlugin);
 
 
+const MAX_POINTS = 50;
 
 @Component({
   selector: 'app-dashboard',
@@ -30,6 +31,9 @@ export class DashboardComponent implements OnInit {
   authToken: string | null = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
   expandedFields: { [key: string]: boolean } = {}; // Zustände für Einklappen der Gruppen
   searchQuery: string = ''; // Suchbegriff für Filterung
+  showDsPanel = false;
+  downsampleEnabled = JSON.parse(localStorage.getItem('dsEnabled') ?? 'true');
+  maxPoints        = +(localStorage.getItem('dsPoints') ?? '50');
 
   constructor(private router: Router, private sensorService: SensorService, private webSocketService: WebSocketService) {}
 
@@ -254,30 +258,29 @@ export class DashboardComponent implements OnInit {
   updateSensorData(sensorId: string, valueName: string, ident: string, startOffset: number, endOffset: number) {
     console.log(`🔍 Abrufen von Daten für Sensor: ${sensorId}, Wert: ${valueName}, Zeitbereich: ${startOffset} bis ${endOffset}`);
 
-    this.sensorService.getSensorData(sensorId, valueName, startOffset, endOffset, this.authToken).subscribe(
-      (data) => {
-        console.log("📊 Empfangene Sensordaten:", data);
+    this.sensorService.getSensorData(sensorId, valueName,
+      startOffset, endOffset,
+      this.authToken).subscribe(
+      data => {
+        if (!data?.timestamps?.length) { return; }
 
-        if (!data || !data.timestamps || !data.values || data.timestamps.length === 0) {
-          console.warn("⚠️ Keine Daten für diesen Sensor vorhanden!");
-          return;
+        // ▸ Down‑Sampling nur, wenn nötig
+        const { timestamps, values } =
+          this.downsample(data.timestamps, data.values);
+
+        const chart = this.charts[ident];
+        if (chart) {
+          chart.data.labels           = timestamps.map(t =>
+            new Date(t).toLocaleTimeString());
+          chart.data.datasets[0].data = values;
+          this.addDayChangeAnnotations(chart, timestamps);
+          chart.update();
         }
 
-        if (this.charts[ident]) {
-          this.charts[ident].data.labels = data.timestamps.map((t: any) => new Date(t).toLocaleTimeString());
-          this.charts[ident].data.datasets[0].data = data.values;
-          this.charts[ident].update();
-          console.log(`✅ Diagramm für ${ident} aktualisiert!`);
-        }
-
-        // **🚀 Wenn EndOffset 0 ist, aktiviere Live-Daten**
-        if (endOffset === 0) {
-          this.enableLiveData(ident);
-        } else if (endOffset !== 0){
-          this.disableLiveData(ident);
-        }
+        endOffset === 0 ? this.enableLiveData(ident)
+          : this.disableLiveData(ident);
       },
-      (error) => console.error("❌ Fehler beim Abrufen der Sensordaten:", error)
+      err => console.error('❌ Sensor‑Datenfehler:', err)
     );
   }
 
@@ -335,7 +338,7 @@ export class DashboardComponent implements OnInit {
       chart.data.labels.push(timeLabel);
       chart.data.datasets[0].data.push(data.value);
 
-      if (chart.data.labels.length > 20) {
+      if (this.downsampleEnabled && chart.data.labels.length > MAX_POINTS) {
         chart.data.labels.shift();
         chart.data.datasets[0].data.shift();
       }
@@ -369,4 +372,89 @@ export class DashboardComponent implements OnInit {
     });
 
   }
+
+  applyDownsampleSettings() {
+    localStorage.setItem('dsEnabled', JSON.stringify(this.downsampleEnabled));
+    localStorage.setItem('dsPoints',  this.maxPoints.toString());
+    this.showDsPanel = false;
+
+    // Optional: Charts sofort neu laden
+    Object.values(this.sensors).forEach((s: any) =>
+      this.updateSensorData(s.sensorId, s.valueName, s.ident, -1, 0));
+  }
+
+
+  private downsample<T>(
+    timestamps: T[],
+    values: number[]
+  ): { timestamps: T[]; values: number[] } {
+
+    /* ➜ verwende user‑def. maxPoints */
+    const max = this.maxPoints;
+
+    if (!this.downsampleEnabled || timestamps.length <= max) {
+      return { timestamps, values };
+    }
+
+    const step = timestamps.length / max;
+    const ts: T[] = [];
+    const vs: number[] = [];
+
+    for (let i = 0; i < max; i++) {
+      const idx = Math.min(Math.round(i * step), timestamps.length - 1);
+      ts.push(timestamps[idx]);
+      vs.push(values[idx]);
+    }
+    return { timestamps: ts, values: vs };
+  }
+
+  /** Fügt für jeden Tageswechsel eine gestrichelte Linie + Label ein */
+  addDayChangeAnnotations(
+    chart: Chart,
+    timestamps: (number | string | Date)[]
+  ) {
+    if (!chart.options.plugins!.annotation) {
+      chart.options.plugins!.annotation = { annotations: {} };
+    }
+    const annos: any = chart.options.plugins!.annotation.annotations;
+
+    let lastDay = '';
+    timestamps.forEach((t, idx) => {
+      const d = new Date(t);
+      const dayKey = d.toISOString().substring(0, 10);   // YYYY‑MM‑DD
+
+      if (idx > 0 && dayKey !== lastDay) {
+        annos[`day_${dayKey}`] = {
+          type: 'line',
+
+          /* ①  Vor den Datensätzen, also hinter ihnen, zeichnen */
+          drawTime: 'beforeDatasetsDraw',   // <— wichtig
+          // oder zusätzlich/alternativ:
+          z: -10,                           // ganz nach hinten im Zeichen‑Stack
+
+          xMin: idx - 0.5,
+          xMax: idx - 0.5,
+          borderColor: this.darkMode ? '#aaaaaa' : '#666666',
+          borderWidth: 1,
+          borderDash: [6, 6],
+
+          label: {
+            display: true,
+            content: d.toLocaleDateString(),   // 12.05.2025
+            position: 'start',
+            rotation: 0,
+            yAdjust: -6,
+            /* ②  Hintergrund völlig durchsichtig */
+            backgroundColor: 'rgba(0,0,0,0)',  // oder leicht transparent
+            color: this.darkMode ? '#bbb' : '#444',
+            font: { style: 'italic', size: 10 }
+          }
+        };
+
+      }
+      lastDay = dayKey;
+    });
+  }
+
+
 }
