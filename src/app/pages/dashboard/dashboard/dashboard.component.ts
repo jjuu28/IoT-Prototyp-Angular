@@ -7,6 +7,8 @@ import { NgForOf, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import annotationPlugin from 'chartjs-plugin-annotation';
 Chart.register(annotationPlugin);
+import { CustomRangePickerComponent} from '../custom-range-picker/custom-range-picker.component';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
 
 
 const MAX_POINTS = 50;
@@ -35,7 +37,7 @@ export class DashboardComponent implements OnInit {
   downsampleEnabled = JSON.parse(localStorage.getItem('dsEnabled') ?? 'true');
   maxPoints        = +(localStorage.getItem('dsPoints') ?? '50');
 
-  constructor(private router: Router, private sensorService: SensorService, private webSocketService: WebSocketService) {}
+  constructor(private router: Router, private sensorService: SensorService, private webSocketService: WebSocketService, private bottomSheet: MatBottomSheet) {}
 
   ngOnInit() {
     if (!this.authToken) {
@@ -319,12 +321,13 @@ export class DashboardComponent implements OnInit {
   }
 
   promptCustomRange(sensorId: string, valueName: string, ident: string) {
-    const startOffset = prompt('Gib den Start-Offset in Stunden ein (z.B. -24 für die letzten 24 Stunden):', '-1');
-    const endOffset = prompt('Gib den End-Offset in Stunden ein (z.B. 0 für jetzt):', '0');
-
-    if (startOffset !== null && endOffset !== null) {
-      this.updateSensorData(sensorId, valueName, ident, parseFloat(startOffset), parseFloat(endOffset));
-    }
+    const ref = this.bottomSheet.open(CustomRangePickerComponent);
+    ref.afterDismissed().subscribe(range => {
+      if (!range) return;
+      const startOffset = (range.start.getTime() - Date.now())/3600000;
+      const endOffset   = (range.end.getTime()   - Date.now())/3600000;
+      this.updateSensorData(sensorId, valueName, ident, startOffset, endOffset);
+    });
   }
 
   listenForLiveUpdates() {
