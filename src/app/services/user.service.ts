@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {catchError, Observable, tap, throwError} from 'rxjs';
 
 // Interface für Benutzerdaten
 interface User {
   firstname: string;
   lastname: string;
   email: string;
-  [key: string]: any; // Für zusätzliche Felder, die von der API gesendet werden
 }
 
 // Interface für Registrierungsanfrage
@@ -38,16 +37,25 @@ export class UserService {
     return 'user-' + Math.random().toString(36).substr(2, 9);
   }
 
-  getUser(token: string | null): Observable<User> {
+  getUser(token: string | null): Observable<any> {
     if (!token) {
-      return new Observable();
+      console.error('Kein Token angegeben für getUser');
+      return throwError(() => new Error('Kein Authentifizierungstoken vorhanden'));
     }
 
     const headers = new HttpHeaders({
       Authorization: 'Bearer ' + token
     });
 
-    return this.http.get<User>(`${this.apiUrl}/user`, { headers });
+    console.log('Sende Anfrage an:', `${this.apiUrl}/user`, 'mit Token:', token);
+
+    return this.http.get<any>(`${this.apiUrl}/user`, { headers }).pipe(
+      tap(response => console.log('Antwort von getUser:', response)),
+      catchError(error => {
+        console.error('Fehler in getUser:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   registerUser(request: RegisterRequest): Observable<RegisterResponse> {
