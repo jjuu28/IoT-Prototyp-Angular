@@ -9,7 +9,19 @@
 
     <!-- ▸ Floating‑Panel -->
     <div class="ds-panel" [class.visible]="showDsPanel">
-      <h4>Downsampling</h4>
+      <h4>
+        Downsampling
+        <!-- Tooltip + Klick-Dialog -->
+        <span
+          class="info-icon"
+          matTooltip="Kurzinfo: weniger Punkte → bessere Performance"
+          matTooltipShowDelay="300"
+          matTooltipPosition="above"
+          (click)="openDownsampleInfo()">
+          ℹ️
+        </span>
+      </h4>
+
 
       <!-- Switch -->
       <label class="switch">
