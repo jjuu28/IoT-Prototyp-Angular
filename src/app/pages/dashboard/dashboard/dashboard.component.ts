@@ -412,52 +412,55 @@ export class DashboardComponent implements OnInit {
   }
 
   /** Fügt für jeden Tageswechsel eine gestrichelte Linie + Label ein */
+  /** Zeichnet eine Linie bei jedem Datum‑Wechsel, egal wie kurz der Zeitraum ist. */
   addDayChangeAnnotations(
     chart: Chart,
     timestamps: (number | string | Date)[]
   ) {
-    if (!chart.options.plugins!.annotation) {
-      chart.options.plugins!.annotation = { annotations: {} };
-    }
-    const annos: any = chart.options.plugins!.annotation.annotations;
+    // Annotation‑Grundstruktur
+    if (!chart.options.plugins)               chart.options.plugins = {};
+    if (!chart.options.plugins.annotation)    chart.options.plugins.annotation = { annotations: {} };
+    const annos: any = chart.options.plugins.annotation.annotations;
 
-    let lastDay = '';
+    /* 1) Vorherige day_‑Linien entfernen */
+    Object.keys(annos)
+      .filter(k => k.startsWith('day_'))
+      .forEach(k => delete annos[k]);
+
+    /* 2) Tageswechsel ermitteln
+          – nicht auf Laufzeit (<24 h) prüfen
+          – mit der ersten *in* timestamps liegenden Tages­grenze beginnen       */
+    const dateStr = (t: any) => new Date(t).toISOString().slice(0, 10);
+    let lastDate  = dateStr(timestamps[0]);
+
     timestamps.forEach((t, idx) => {
-      const d = new Date(t);
-      const dayKey = d.toISOString().substring(0, 10);   // YYYY‑MM‑DD
-
-      if (idx > 0 && dayKey !== lastDay) {
-        annos[`day_${dayKey}`] = {
+      const dStr = dateStr(t);
+      if (dStr !== lastDate) {
+        annos[`day_${dStr}`] = {
           type: 'line',
-
-          /* ①  Vor den Datensätzen, also hinter ihnen, zeichnen */
-          drawTime: 'beforeDatasetsDraw',   // <— wichtig
-          // oder zusätzlich/alternativ:
-          z: -10,                           // ganz nach hinten im Zeichen‑Stack
-
+          drawTime: 'beforeDatasetsDraw',   // hinter den Daten
           xMin: idx - 0.5,
           xMax: idx - 0.5,
           borderColor: this.darkMode ? '#aaaaaa' : '#666666',
           borderWidth: 1,
           borderDash: [6, 6],
-
           label: {
             display: true,
-            content: d.toLocaleDateString(),   // 12.05.2025
+            content: new Date(t).toLocaleDateString(),  // z. B. 16.05.2025
             position: 'start',
-            rotation: 0,
             yAdjust: -6,
-            /* ②  Hintergrund völlig durchsichtig */
-            backgroundColor: 'rgba(0,0,0,0)',  // oder leicht transparent
+            backgroundColor: 'rgba(0,0,0,0)',
             color: this.darkMode ? '#bbb' : '#444',
             font: { style: 'italic', size: 10 }
           }
         };
-
       }
-      lastDay = dayKey;
+      lastDate = dStr;
     });
+
+    chart.update();
   }
+
 
 
 }
