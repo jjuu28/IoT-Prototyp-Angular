@@ -1,5 +1,20 @@
 .container {
   padding: 20px;
+  max-width: 800px;
+  margin: 20px auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.username {
+  font-weight: bold;
 }
 
 .alert-box {
@@ -24,13 +39,13 @@
 }
 
 .message-item strong {
-  color: #721c24; /* Dunkles Rot für die Dringlichkeit */
+  color: #721c24;
 }
 
 .all-notifications {
   display: inline-block;
   padding: 8px 16px;
-  background-color: #007bff; /* Blauer Hintergrund */
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
@@ -40,12 +55,12 @@
 }
 
 .all-notifications:hover {
-  background-color: #0056b3; /* Dunkleres Blau beim Hover */
-  transform: scale(1.05); /* Leichte Vergrößerung beim Hover */
+  background-color: #0056b3;
+  transform: scale(1.05);
 }
 
 .all-notifications:active {
-  transform: scale(0.95); /* Leichte Verkleinerung beim Klicken */
+  transform: scale(0.95);
 }
 
 .sensor-changes {
@@ -76,7 +91,7 @@
 
 .sensor-status {
   font-size: 0.8rem;
-  color: #ff0000; /* Rot für Inaktivitätsmeldung */
+  color: #ff0000;
   margin-top: 5px;
 }
 
@@ -85,3 +100,4 @@
   color: #666;
   margin-top: 5px;
 }
+
