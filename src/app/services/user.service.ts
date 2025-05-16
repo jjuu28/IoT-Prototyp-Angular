@@ -16,7 +16,8 @@ interface User {
 export class UserService {
   private apiUrl = 'https://node-red.studybuddy.top/agrar';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   getUser(token: string | null): Observable<User> {
     if (!token) {
@@ -27,6 +28,8 @@ export class UserService {
       'Authorization': 'Bearer ' + token
     });
 
-    return this.http.get<User>(`${this.apiUrl}/user`, { headers });
+    return this.http.get<User>(`${this.apiUrl}/user`, {headers});
+
+
   }
 }

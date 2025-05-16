@@ -53,6 +53,7 @@ export class HomeComponent implements OnInit {
       this.router.navigate(['/login']);
     } else {
       console.log('Auth Token:', this.authToken); // Debug: Token ausgeben
+      this.checkuserlogin();
       this.extractUserIdFromToken();
       this.loadUsername();
       this.loadWarnings();
@@ -60,6 +61,15 @@ export class HomeComponent implements OnInit {
       this.setupWebSocket();
       // Regelmäßige Prüfung auf Inaktivität
       setInterval(() => this.checkSensorActivity(), 60000); // Alle 60 Sekunden prüfen
+    }
+  }
+
+  private checkuserlogin() {
+    if (!this.authToken) {
+      console.warn('Kein authToken gefunden, Benutzer nicht eingeloggt.');
+      this.router.navigate(['/login']);
+    } else {
+      console.log('Benutzer ist eingeloggt.');
     }
   }
 
@@ -79,6 +89,7 @@ export class HomeComponent implements OnInit {
   loadUsername() {
     console.log("halloooooooooooooooooooooooooooooooo");
     if (!this.authToken) {
+      console.log("Auth Token Stimmt nicht")
       console.error('Kein authToken verfügbar, kann Benutzerdaten nicht laden.');
       this.username = 'Unbekannt';
       return;
@@ -87,6 +98,12 @@ export class HomeComponent implements OnInit {
     this.userService.getUser(this.authToken).subscribe({
       next: (user) => {
         console.log('Empfangene Benutzerdaten:', user);
+        // Detaillierte Ausgabe einzelner Felder
+        console.log('Vorname:', user.firstname);
+        console.log('Nachname:', user.lastname);
+        console.log('E-Mail:', user.email);
+        // Falls es zusätzliche Felder gibt
+        console.log('Zusätzliche Felder:', Object.keys(user).filter(key => !['firstname', 'lastname', 'email'].includes(key)).map(key => ({ [key]: user[key] })));
         this.username = user.firstname || 'Unbekannt';
       },
       error: (error) => {
