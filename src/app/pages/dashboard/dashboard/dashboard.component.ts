@@ -9,6 +9,11 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 Chart.register(annotationPlugin);
 import { CustomRangePickerComponent} from '../custom-range-picker/custom-range-picker.component';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import { MatTooltipModule } from '@angular/material/tooltip';   // ⬅︎ ergänzen
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';   // ⬅︎ NEU
+import { DownsampleInfoDialogComponent }
+  from './downsample-info-dialog.component';
+
 
 
 const MAX_POINTS = 50;
@@ -19,7 +24,10 @@ const MAX_POINTS = 50;
   imports: [
     NgForOf,
     NgIf,
-    FormsModule
+    FormsModule,
+    MatTooltipModule,
+    MatDialogModule
+
   ],
   styleUrls: ['./dashboard.component.css']
 })
@@ -37,7 +45,8 @@ export class DashboardComponent implements OnInit {
   downsampleEnabled = JSON.parse(localStorage.getItem('dsEnabled') ?? 'true');
   maxPoints        = +(localStorage.getItem('dsPoints') ?? '50');
 
-  constructor(private router: Router, private sensorService: SensorService, private webSocketService: WebSocketService, private bottomSheet: MatBottomSheet) {}
+  constructor(private router: Router, private sensorService: SensorService, private webSocketService: WebSocketService, private bottomSheet: MatBottomSheet, private dialog: MatDialog
+  ) {}
 
   ngOnInit() {
     if (!this.authToken) {
@@ -52,6 +61,14 @@ export class DashboardComponent implements OnInit {
       this.darkMode = localStorage.getItem("darkMode") === "enabled";
     }
   }
+  /* 🪄 öffnet den Dialog */
+  openDownsampleInfo(): void {
+    this.dialog.open(DownsampleInfoDialogComponent, {
+      panelClass: 'ds-info-panel',     // erlaubt eigenes Styling
+      autoFocus: false
+    });
+  }
+
 
   loadSensors() {
     console.log("AuthToken:", this.authToken);
