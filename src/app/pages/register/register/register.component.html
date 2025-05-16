@@ -1,0 +1,64 @@
+<div class="container">
+  <h2>Registrieren</h2>
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="firstname">Vorname</label>
+      <input
+        type="text"
+        id="firstname"
+        formControlName="firstname"
+        [ngClass]="{ 'is-invalid': submitted && f['firstname'].errors }"
+      />
+      <div *ngIf="submitted && f['firstname'].errors" class="error">
+        <div *ngIf="f['firstname'].errors?.['required']">Vorname ist erforderlich.</div>
+        <div *ngIf="f['firstname'].errors?.['minlength']">Vorname muss mindestens 3 Zeichen lang sein.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="lastname">Nachname</label>
+      <input
+        type="text"
+        id="lastname"
+        formControlName="lastname"
+        [ngClass]="{ 'is-invalid': submitted && f['lastname'].errors }"
+      />
+      <div *ngIf="submitted && f['lastname'].errors" class="error">
+        <div *ngIf="f['lastname'].errors?.['required']">Nachname ist erforderlich.</div>
+        <div *ngIf="f['lastname'].errors?.['minlength']">Nachname muss mindestens 3 Zeichen lang sein.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">E-Mail</label>
+      <input
+        type="email"
+        id="email"
+        formControlName="email"
+        [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
+      />
+      <div *ngIf="submitted && f['email'].errors" class="error">
+        <div *ngIf="f['email'].errors?.['required']">E-Mail ist erforderlich.</div>
+        <div *ngIf="f['email'].errors?.['email']">Gültige E-Mail-Adresse eingeben.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Passwort</label>
+      <input
+        type="password"
+        id="password"
+        formControlName="password"
+        [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
+      />
+      <div *ngIf="submitted && f['password'].errors" class="error">
+        <div *ngIf="f['password'].errors?.['required']">Passwort ist erforderlich.</div>
+        <div *ngIf="f['password'].errors?.['minlength']">Passwort muss mindestens 6 Zeichen lang sein.</div>
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="registerForm.invalid">Registrieren</button>
+  </form>
+  <div class="link-text" [routerLink]="'/login'" [class.active]="currentRoute === '/login'"></div>
+  <p class="link-text">Sie sind schon registriert? <a routerLink="/login">Jetzt einloggen</a></p>
+</div>
