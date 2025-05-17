@@ -84,7 +84,7 @@ export class DashboardComponent implements OnInit {
           Object.values(this.sensors).forEach((sensor: any) => this.createSensorCard(sensor));
         }
       },
-      (error) => { console.error("Fehler beim Abrufen der Sensoren", error); this.logout(); }
+      (error) => { console.error("Fehler beim Abrufen der Sensoren", error);  }
 
     );
   }
