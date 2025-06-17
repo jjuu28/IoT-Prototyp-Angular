@@ -1,4 +1,4 @@
-/* Footer-Grunddesign */
+
 .footer-nav {
   position: fixed;
   bottom: 0;
@@ -8,7 +8,6 @@
   border-top: 2px solid #F5F5DC;
 }
 
-/* Stil für Navigationselemente */
 .nav-item {
   flex: 1;
   text-align: center;
@@ -20,25 +19,23 @@
   transition: background-color 0.3s ease-in-out;
 }
 
-/* Icons */
 .nav-item .icon {
   display: block;
   font-size: 22px;
   margin-bottom: 5px;
 }
 
-/* Linien zwischen den Elementen */
 .nav-item:not(:last-child) {
   border-right: 2px solid #F5F5DC;
 }
 
-/* Hover Effekt */
+
 .nav-item:hover {
   background-color: white;
   cursor: pointer;
 }
 
-/* Aktives Element */
+
 .nav-item.active {
   background-color: #F5F5DC;
   color: grey;
