@@ -1,24 +1,9 @@
-ToDO:
-
-- Vale ToDos:
-
-  
-
-
-- Core:
-  - Header
-  - Footer 
-
-- Home
-  - fehlende Seitenkomponenten:
-    - Wichtige Meldungen
-    - Sensorinfos
-    - 
+Zum ausprobieren kann folgender Sensor verwendet werden:
+- d8:3a:dd:42:e4:59
+Diese Mac Adresse muss in der Weboberfläche im Dashboard unter "Add Sensor" eingetragen werden.
+Dafür muss zunächst ein Nutzer Konto registriert werden.
 
 
-
-- Meldungen  
-  - Benachrichtigungen
 
 # AngularTest
 
