@@ -18,15 +18,13 @@
       <p><strong>Gruppe:</strong> {{ sensor.group_name }}</p>
       <p><strong>Standort:</strong> {{ sensor.location }}</p>
       <p><strong>Einheit:</strong> {{ sensor.unit }}</p>
-
-      <!-- 🆕 Anzeige der Grenzwerte -->
+      
       <div class="sensor-limits">
         <p><strong>Obere Grenze:</strong> {{ sensor.limitUpper }}</p>
         <p><strong>Untere Grenze:</strong> {{ sensor.limitLower }}</p>
         <button (click)="editSensorLimits(sensor)">Grenzen bearbeiten</button>
       </div>
-
-      <!-- 🆕 Anzeige der Meldungen -->
+      
       <div class="sensor-messages">
         <h4>🚨 Letzte Meldungen</h4>
         <ul>
@@ -42,7 +40,6 @@
         <button (click)="updateLocation(sensor)">Aktualisieren</button>
       </div>
 
-      <!-- ✏️ Feld ändern -->
       <div class="sensor-data field-dropdown">
         <label>🌾 Feld ändern:</label>
         <input type="text"
@@ -61,13 +58,7 @@
 
         <button (click)="updateField(sensor)">Aktualisieren</button>
       </div>
-
-
-
-
-
     </div>
-
   </div>
   </div>
 
