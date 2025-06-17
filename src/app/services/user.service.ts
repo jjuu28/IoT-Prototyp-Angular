@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {catchError, Observable, tap, throwError} from 'rxjs';
 
-// Interface für Benutzerdaten
+
 interface User {
   firstname: string;
   lastname: string;
   email: string;
 }
 
-// Interface für Registrierungsanfrage
+
 interface RegisterRequest {
   userId: string;
   firstname: string;
@@ -18,7 +18,7 @@ interface RegisterRequest {
   password: string;
 }
 
-// Interface für Registrierungsantwort
+
 interface RegisterResponse {
   success: boolean;
   message?: string;
@@ -32,7 +32,7 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  // Funktion zur Generierung einer zufälligen userId
+
   generateUserId(): string {
     return 'user-' + Math.random().toString(36).substr(2, 9);
   }
