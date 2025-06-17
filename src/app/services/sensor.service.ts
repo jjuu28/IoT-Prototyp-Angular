@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-// Interface für Sensordaten
 interface SensorData {
   value: number;
   unit: string;
@@ -13,7 +12,6 @@ interface SensorData {
   sensorId?: string;
 }
 
-// Interface für die Antwort von getSensorData und getLastData
 interface SensorDataResponse {
   timestamps: string[];
   values: number[];
