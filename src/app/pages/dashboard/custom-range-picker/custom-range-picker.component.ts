@@ -23,8 +23,8 @@ interface Preset { label: string; startOffsetH: number; endOffsetH: number; }
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
-    MatInputModule,           // <<< hier statt einzelner Datepicker‐Direktiven
-    MatDatepickerModule,      // <<< MatDatepickerModule deckt auch range picker
+    MatInputModule,          
+    MatDatepickerModule,     
     MatNativeDateModule,
     NgxSliderModule
   ],
