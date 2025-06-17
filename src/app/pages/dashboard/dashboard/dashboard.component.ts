@@ -9,8 +9,8 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 Chart.register(annotationPlugin);
 import { CustomRangePickerComponent} from '../custom-range-picker/custom-range-picker.component';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
-import { MatTooltipModule } from '@angular/material/tooltip';   // ⬅︎ ergänzen
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';   // ⬅︎ NEU
+import { MatTooltipModule } from '@angular/material/tooltip';   
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';  
 import { DownsampleInfoDialogComponent }
   from './downsample-info-dialog.component';
 
@@ -61,7 +61,7 @@ export class DashboardComponent implements OnInit {
       this.darkMode = localStorage.getItem("darkMode") === "enabled";
     }
   }
-  /* 🪄 öffnet den Dialog */
+
   openDownsampleInfo(): void {
     this.dialog.open(DownsampleInfoDialogComponent, {
       panelClass: 'ds-info-panel',     // erlaubt eigenes Styling
@@ -128,7 +128,7 @@ export class DashboardComponent implements OnInit {
       const lineColor = isDarkMode ? '#9c27b0' : '#03a9f4';
       const backgroundColor = isDarkMode ? 'rgba(156, 39, 176, 0.2)' : 'rgba(3, 169, 244, 0.2)';
 
-      // Hole die Sensorgrenzen
+    
       this.sensorService.getSensorLimits(sensor.sensorId, sensor.valueName, this.authToken!).subscribe(
         (resp) => {
           const limits = resp.data;
@@ -170,7 +170,7 @@ export class DashboardComponent implements OnInit {
             };
           }
 
-          // Erstelle das Chart mit Annotations (auch wenn leer)
+       
           this.charts[sensor.ident] = new Chart(ctx, {
             type: "line",
             data: {
@@ -204,7 +204,7 @@ export class DashboardComponent implements OnInit {
         (err) => {
           console.warn("⚠️ Keine Limits für Sensor", sensor.sensorId);
 
-          // Fallback: Chart ohne Annotations
+   
           this.charts[sensor.ident] = new Chart(ctx, {
             type: "line",
             data: {
@@ -398,7 +398,7 @@ export class DashboardComponent implements OnInit {
     localStorage.setItem('dsPoints',  this.maxPoints.toString());
     this.showDsPanel = false;
 
-    // Optional: Charts sofort neu laden
+    
     Object.values(this.sensors).forEach((s: any) =>
       this.updateSensorData(s.sensorId, s.valueName, s.ident, -1, 0));
   }
@@ -409,7 +409,7 @@ export class DashboardComponent implements OnInit {
     values: number[]
   ): { timestamps: T[]; values: number[] } {
 
-    /* ➜ verwende user‑def. maxPoints */
+    
     const max = this.maxPoints;
 
     if (!this.downsampleEnabled || timestamps.length <= max) {
@@ -428,8 +428,7 @@ export class DashboardComponent implements OnInit {
     return { timestamps: ts, values: vs };
   }
 
-  /** Fügt für jeden Tageswechsel eine gestrichelte Linie + Label ein */
-  /** Zeichnet eine Linie bei jedem Datum‑Wechsel, egal wie kurz der Zeitraum ist. */
+
   addDayChangeAnnotations(
     chart: Chart,
     timestamps: (number | string | Date)[]
@@ -439,14 +438,12 @@ export class DashboardComponent implements OnInit {
     if (!chart.options.plugins.annotation)    chart.options.plugins.annotation = { annotations: {} };
     const annos: any = chart.options.plugins.annotation.annotations;
 
-    /* 1) Vorherige day_‑Linien entfernen */
+  
     Object.keys(annos)
       .filter(k => k.startsWith('day_'))
       .forEach(k => delete annos[k]);
 
-    /* 2) Tageswechsel ermitteln
-          – nicht auf Laufzeit (<24 h) prüfen
-          – mit der ersten *in* timestamps liegenden Tages­grenze beginnen       */
+
     const dateStr = (t: any) => new Date(t).toISOString().slice(0, 10);
     let lastDate  = dateStr(timestamps[0]);
 
