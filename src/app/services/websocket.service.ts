@@ -8,9 +8,9 @@ import { webSocket } from 'rxjs/webSocket';
 export class WebSocketService {
   private socket$ = webSocket({
     url: 'wss://node-red.studybuddy.top/liveDataAgrar',
-    deserializer: msg => JSON.parse(msg.data),  // JSON richtig deserialisieren
+    deserializer: msg => JSON.parse(msg.data),  
     openObserver: {
-      next: () => console.log('WebSocket verbunden!')  // Logging für Debugging
+      next: () => console.log('WebSocket verbunden!')  
     },
     closeObserver: {
       next: (event) => console.warn('WebSocket getrennt!', event)
