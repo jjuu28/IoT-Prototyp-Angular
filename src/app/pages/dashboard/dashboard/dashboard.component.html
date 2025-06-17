@@ -3,15 +3,13 @@
     <p>Live-Daten nach Sensorfeldern gruppiert</p>
     <button (click)="toggleDarkMode()">🌙 Dark Mode</button>
     <button (click)="logout()">Logout</button>
-    <button (click)="navigateToAddSensor()">➕ Add Sensor</button> <!-- NEU -->
-    <!-- ⚙️ Settings‑Button im Header -->
+    <button (click)="navigateToAddSensor()">➕ Add Sensor</button> 
+
     <button class="settings-btn" (click)="showDsPanel = !showDsPanel">⚙️</button>
 
-    <!-- ▸ Floating‑Panel -->
     <div class="ds-panel" [class.visible]="showDsPanel">
       <h4>
         Downsampling
-        <!-- Tooltip + Klick-Dialog -->
         <span
           class="info-icon"
           matTooltip="Kurzinfo: weniger Punkte → bessere Performance"
@@ -23,14 +21,14 @@
       </h4>
 
 
-      <!-- Switch -->
+
       <label class="switch">
         <input type="checkbox" [(ngModel)]="downsampleEnabled">
         <span class="slider round"></span>
       </label>
       <span>{{ downsampleEnabled ? 'Aktiv' : 'Aus' }}</span>
 
-      <!-- Slider -->
+
       <input type="range"
              min="5" max="500" step="5"
              [(ngModel)]="maxPoints"
@@ -41,13 +39,13 @@
     </div>
 </header>
 
-<!-- 🔎 Suchfeld für Sensoren oder Felder -->
+
 <div class="search-bar">
     <input type="text" [(ngModel)]="searchQuery" placeholder="Suche nach Sensoren oder Sensorgruppen" />
     <button>🔍</button>
 </div>
 
-<!-- 📌 Felder-Übersicht (zum Ein- & Ausblenden von Sensorgruppen) -->
+
 <div class="field-list">
     <div *ngFor="let fieldName of filterFields()" class="field-card" (click)="toggleFieldGroup(fieldName)">
         <div class="field-icon">🌿</div>
