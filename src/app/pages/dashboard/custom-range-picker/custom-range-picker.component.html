@@ -16,7 +16,6 @@
   <mat-form-field appearance="fill" class="date-range">
     <mat-label>Datum</mat-label>
 
-    <!-- 1) Range-Input mit rangePicker -->
     <mat-date-range-input [rangePicker]="picker">
       <input
         matStartDate
@@ -32,10 +31,10 @@
         (ngModelChange)="onDateChange()">
     </mat-date-range-input>
 
-    <!-- 2) Toggle, referenziert jetzt korrekt das Picker-Objekt -->
+
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
 
-    <!-- 3) Picker mit exportAs -->
+  
     <mat-date-range-picker #picker="matDateRangePicker"></mat-date-range-picker>
   </mat-form-field>
 
