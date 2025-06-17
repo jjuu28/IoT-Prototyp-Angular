@@ -51,15 +51,13 @@ export class SensorGroupComponent implements OnInit {
           this.sensorGroups[fieldName].push(sensor);
         });
 
-        // Zeige nur die Sensoren für das gewählte Feld
         this.sensors = this.sensorGroups[this.fieldName] || [];
 
-        // ❗ Lade die Limits und Meldungen für jeden Sensor
         this.sensors.forEach((sensor: any) => {
           this.loadSensorLimits(sensor);
           this.loadSensorMessages(sensor);
           this.loadLastSensorValue(sensor);
-          sensor.filteredFields = this.allFields; // Anfangszustand = alles zeigen
+          sensor.filteredFields = this.allFields; 
           sensor.showDropdown = false;
           console.log(sensor)
         });
@@ -68,14 +66,12 @@ export class SensorGroupComponent implements OnInit {
     );
   }
 
-  // 🆕 Sensorlimits abrufen
   loadSensorLimits(sensor: any) {
     if (!this.authToken) return;
 
     this.sensorService.getSensorLimits(sensor.sensorId, sensor.valueName, this.authToken).subscribe(
       (data) => {
         console.log(data);
-        //data is a object
         sensor.limitUpper = data.data.grenzeOben ?? "Nicht gesetzt";
         sensor.limitLower = data.data.grenzeUnten ?? "Nicht gesetzt";
       },
@@ -87,8 +83,7 @@ export class SensorGroupComponent implements OnInit {
     const upperLimit = prompt("Gib die neue obere Grenze ein:", sensor.limitUpper);
     const lowerLimit = prompt("Gib die neue untere Grenze ein:", sensor.limitLower);
 
-    // Validierung der Eingaben
-    // upperLimit und lowerLimit müssen Zahlen sein und upperLimit muss größer als lowerLimit sein
+
     // @ts-ignore
     if (isNaN(parseFloat(upperLimit)) || isNaN(parseFloat(lowerLimit))) {
       alert("Bitte gültige Zahlen eingeben!");
@@ -115,7 +110,6 @@ export class SensorGroupComponent implements OnInit {
     }, 1000);
   }
 
-  // 🆕 Sensor-Meldungen abrufen
 
   loadSensorMessages(sensor: any) {
     if (!this.authToken) return;
@@ -224,7 +218,7 @@ export class SensorGroupComponent implements OnInit {
   renameField() {
     this.sensorService.changeFieldName(this.fieldName, this.newFieldName, this.authToken).subscribe(() => {
       alert("Feldname wurde geändert!");
-      this.loadAllFields(); // Update Dropdown
+      this.loadAllFields(); 
     });
     //timeout for 1 second
     setTimeout(() => {
