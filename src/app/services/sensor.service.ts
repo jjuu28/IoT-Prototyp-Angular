@@ -21,7 +21,7 @@ interface SensorDataResponse {
   providedIn: 'root'
 })
 export class SensorService {
-  private apiUrl = 'https://node-red.studybuddy.top/agrar';
+  private apiUrl = 'https://node-red.walimteam.nl/agrar';
 
   constructor(private http: HttpClient) {}
 
@@ -29,7 +29,7 @@ export class SensorService {
     const headers = new HttpHeaders({
       'Authorization': 'Bearer ' + token
     });
-    return this.http.get<SensorData[]>('https://node-red.studybuddy.top/agrar/sensors', { headers });
+    return this.http.get<SensorData[]>('https://node-red.walimteam.nl/agrar/sensors', { headers });
   }
 
   getSensorData(sensorId: string, valueName: string, startOffset: number, endOffset: number, token: string | null): Observable<SensorDataResponse> {

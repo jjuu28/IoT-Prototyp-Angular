@@ -1,6 +1,6 @@
 {
   "/agrar": {
-    "target": "https://node-red.studybuddy.top",
+    "target": "https://node-red.walimteam.nl",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"

@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit {
     private sensorService: SensorService,
     private userService: UserService
   ) {
-    this.socket = new WebSocket('wss://node-red.studybuddy.top/liveDataAgrar');
+    this.socket = new WebSocket('wss://node-red.walimteam.nl/liveDataAgrar');
   }
 
   ngOnInit() {

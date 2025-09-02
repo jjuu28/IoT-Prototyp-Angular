@@ -28,7 +28,7 @@ interface RegisterResponse {
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'https://node-red.studybuddy.top/agrar';
+  private apiUrl = 'https://node-red.walimteam.nl/agrar';
 
   constructor(private http: HttpClient) {}
 

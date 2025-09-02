@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MessageService {
-  private apiUrl = 'https://node-red.studybuddy.top/agrar';
+  private apiUrl = 'https://node-red.walimteam.nl/agrar';
 
   constructor(private http: HttpClient) {}
 

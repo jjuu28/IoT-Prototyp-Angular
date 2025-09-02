@@ -22,7 +22,7 @@ export class LoginComponent {
   rememberMe: boolean = false;
   emailError: string = '';
   passwordError: string = '';
-  apiUrl: string = 'https://node-red.studybuddy.top/agrar';
+  apiUrl: string = 'https://node-red.walimteam.nl/agrar';
 
   constructor(private router: Router) {}
 
